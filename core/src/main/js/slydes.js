@@ -76,9 +76,20 @@ function Slydes_setup() {
 	
 	$.extend(Slydes, {
 		script: script,
-		base: script.src.replace(new RegExp('\/[^/]+\/' + SLYDES_JS + '.*$'), '/')
+		base: script.src.replace(new RegExp('\/[^/]+\/' + SLYDES_JS + '.*$'), '/'),
+		import: function() {
+			var count = arguments.length - 1
+			var success = arguments[count]
+			var join = function() {
+				count--
+				if (count == 0) success()
+			}
+			for (var i = 0; i < arguments.length - 1; i ++ ) {
+				this.getScript(this.base + "js/" + arguments[i] + ".js", join)
+			}
+		}
 	})
-	Slydes.getScript(Slydes.base + "js/main.js", function() {
+	Slydes.import('main', function() {
 		Slydes.setup($)
 	})
 	
