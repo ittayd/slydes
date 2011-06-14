@@ -1,7 +1,7 @@
 /**
  * Misc. utilities. Some of these are required before loading the jquery support
  */
-Slydes = $.extend(Slydes, {
+Slydes = jQuery.extend(Slydes, {
 	parseQuery: function(first, second) {
 		var query = typeof first === 'string' ? first : window.location.search, 
 			options = (typeof first === 'object' && typeof second === 'undefined') ? first : second, 
