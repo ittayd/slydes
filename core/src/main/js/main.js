@@ -3,6 +3,8 @@
  */
 jQuery.extend(Slydes, {
 	setup: function($) {
-		alert('success')
+		this.import('globals', 'utils', 'options', 'presentation', 'slyde', 'worker', function() {
+			alert('success')
+		})
 	}
 })
