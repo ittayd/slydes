@@ -10,6 +10,7 @@ var SLYDES_JS = SLYDES_JS || 'slydes.js'
 Slydes.getScript = function(url, success) {
 	var script     = document.createElement('script')
 	script.src = url
+	script.type = "text/javascript"
 
 	var head = document.getElementsByTagName('head')[0],
 	done = false
@@ -20,7 +21,9 @@ Slydes.getScript = function(url, success) {
 			done = true
 
 			// callback function provided as param
-			success()
+			if (typeof success == 'function') {
+				success()
+			}
 
 			script.onload = script.onreadystatechange = null
 			head.removeChild(script)
