@@ -1,28 +1,66 @@
 /**
+ * The worker acts as a hub. It accepts messages from one page and distributes it to the rest. 
  * 
+ * It also accumulates them so they can be replayed. E.g., by a new client that wants to get up to speed with the rest
  */
-function main() {
-	foo
-	bar
-}
 
-console.log("loading worker")
-var mainString = main.toString()
-var bodyString     = mainString.substring( mainString.indexOf("{")+1, mainString.lastIndexOf("}") )
-window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
-window.URL = window.URL || window.webkitURL
-var bb = new BlobBuilder()
-bb.append(bodyString)
+Slydes.Worker = jQuery.extend({}, {
+	/**
+	 * This function acts as a container of code for the worker and is not meant to be called directly
+	 */
+	__worker__: function() {
+		var connections = [],
+		    events = []
+	
+		self.onconnect = function(event){
+	
+			var port = event.ports[0];
+			connections.push(port);
+	
+			port.onmessage = function(event){
+				var msg = event.data
+	
+				if (msg.events) {
+					port.postMessage({events: events})
+				}
+	
+				else {
+					for (var i = 0; i < connections.length; i++) {
+						if (connections[i] != port) {
+							connections[i].postMessage(msg)
+						}
+					}
+				}
+			}
+		}
+	
+	}, 
 
-var url = window.URL.createObjectURL(bb.getBlob())
+	init: function() {
+		if (typeof SharedWorker != 'function' ) {
+			Slydes.notice('This browser does not support synchronization of presentation windows')
+			return
+		}
+		console.log("loading worker")
+		var mainString = this.__worker__.toString()
+		var bodyString     = mainString.substring( mainString.indexOf("{")+1, mainString.lastIndexOf("}") )
+		window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
+		window.URL = window.URL || window.webkitURL
+		var bb = new BlobBuilder()
+		bb.append(bodyString)
+		
+		var url = window.URL.createObjectURL(bb.getBlob())
+		
+		try {
+			this.instance = new SharedWorker(url, 'slydes')
+		} catch(e){
+			var msg = 'Failed to create Web Worker - multi window presentations and presenter view disabled'
+			console.log(msg);
+			console.log(e);
+		}
+	}
+})
 
-try {
-	Slydes.worker = new SharedWorker(url, 'slydes')
-} catch(e){
-	var msg = 'Failed to create Web Worker - multi window presentations and presenter view disabled'
-	console.log(msg);
-	console.log(e);
-}
-
+jQuery('document').ready(function(){Slydes.Worker.init()})
 
 
