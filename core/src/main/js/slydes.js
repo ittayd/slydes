@@ -7,7 +7,7 @@ var JQUERY_URL = JQUERY_URL || 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.
 var Slydes = Slydes || {}
 var SLYDES_JS = SLYDES_JS || 'slydes.js'
 
-Slydes.getScript = function(url, success) {
+Slydes.loadScript = function(url, success) {
 	var script     = document.createElement('script')
 	script.src = url
 	script.type = "text/javascript"
@@ -41,7 +41,7 @@ if (typeof jQuery == 'undefined') {
 	}
 
 
-	Slydes.getScript(JQUERY_URL, function() {
+	Slydes.loadScript(JQUERY_URL, function() {
 		if (typeof jQuery=='undefined') {
 			alert("Failed to load jquery from " + JQUERY_URL)
 		} else {
@@ -88,7 +88,7 @@ function Slydes_setup() {
 				if (count == 0) success()
 			}
 			for (var i = 0; i < arguments.length - 1; i ++ ) {
-				this.getScript(this.base + "js/" + arguments[i] + ".js", join)
+				this.loadScript(this.base + "js/" + arguments[i] + ".js", join)
 			}
 		}
 	})

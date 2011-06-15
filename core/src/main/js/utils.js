@@ -24,7 +24,7 @@ Slydes = jQuery.extend(Slydes, {
 	/** 
 	 * Accoring to: http://yearofmoo.com/2011/03/cross-browser-stylesheet-preloading/
 	 */
-	getCss: function(url, success, options) {
+	loadCss: function(url, success, options) {
 		var options = typeof success == 'object' ? success : options
 			options = jQuery.extend({idprefix: 'css-load-track-id', delay: 100, limit: 200}, options),
 			id = options.idprefix + (new Date().getTime()),
@@ -110,5 +110,5 @@ Slydes = jQuery.extend(Slydes, {
 	
 })
 
-Slydes.getScript('http://www.sandbox.timbenniks.com/projects/jquery-notice/jquery.notice.js')
-Slydes.getCss('http://www.sandbox.timbenniks.com/projects/jquery-notice/jquery.notice.css')
+Slydes.loadScript('http://www.sandbox.timbenniks.com/projects/jquery-notice/jquery.notice.js')
+Slydes.loadCss('http://www.sandbox.timbenniks.com/projects/jquery-notice/jquery.notice.css')
