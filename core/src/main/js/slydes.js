@@ -4,7 +4,13 @@
 
 var JQUERY_URL = JQUERY_URL || 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js'
 
-var Slydes = Slydes || {}
+var Slydes = {
+	readyCallbacks: [],
+	ready: function(callback) {
+		this.readyCallbacks.push(callback)
+	}
+}
+
 var SLYDES_JS = SLYDES_JS || 'slydes.js'
 
 Slydes.loadScript = function(url, success) {
