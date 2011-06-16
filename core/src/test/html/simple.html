@@ -6,6 +6,20 @@
 		<script src="../../main/js/slydes.js"></script>
 	</head>
 	<body>
-		Hi
+		<script type="text/javascript">
+			Slydes.ready(function(presentation){
+				jQuery('.slyde').slydes(function(slide) {
+					slide.toString = function() {return "hello";}
+				})
+
+				Slydes.notice('first slide is ' + presentation.slides[0])
+			})		
+		</script>
+		<section>
+			<article class="slyde">
+				<h1>First</h1>
+				This is the first slide
+			</article>
+		</section>
 	<body>
 </html>
