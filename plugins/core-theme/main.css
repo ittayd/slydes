@@ -1,0 +1,29 @@
+html, body, #frame, #framecontainer {
+	height:100%;
+}
+body {
+	font-size:100%;
+	margin:0;
+	padding:0;
+}
+
+.slyde {
+	height: 100%;
+	float: left;
+}
+
+#slydes-frame {
+	position: relative;
+	margin: 0 auto;
+	overflow: hidden;
+	height: 100%;
+}
+
+#slydes-strip {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 200%;
+	height: 100%;
+	-moz-transition: left 1s ease-in-out;
+}
