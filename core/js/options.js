@@ -7,7 +7,7 @@ jQuery.extend(Slydes, {
 			return {} // return empty object
 		}
 		
-		Slydes.parseQuery(query)
+		return Slydes.parseQuery(query)
 	})()
 })
 
