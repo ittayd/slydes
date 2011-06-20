@@ -10,13 +10,18 @@ jQuery('document').ready(function($){
 	
 	
 	if (!frame.hasClass('slydes-preset')) {
-		var frameHeight = $('body').height(),
-			frameWidth = frameHeight * 4 / 3
+		var frameHeight = Math.floor($('body').height()),
+			frameWidth = Math.floor(frameHeight * 4 / 3)
+			
 		frame.height(frameHeight)
 		frame.width(frameWidth)
+		
 		Slydes.ready(function(presentation){
 			presentation.slides.width(frameWidth)
 			presentation.slides.appendTo(strip)
+			Slydes.Slide.prototype.transition = function(from) {
+				strip.css('left', -(this.index) * frameWidth)
+			}
 		})
 	}
 	

@@ -3,7 +3,7 @@
  */
 jQuery.extend(Slydes, {
 	setup: function($) {
-		Slydes.import('globals', 'utils', 'options', 'presentation', 'slide', 'worker', 'step', function() {
+		Slydes.import('globals', 'utils', 'options', 'presentation', 'slide', 'worker', 'step', 'control', function() {
 			Slydes.Plugins = {}
 			var plugins = Slydes.options.plugins 
 			if (plugins === undefined) {
