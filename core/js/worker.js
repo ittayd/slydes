@@ -4,6 +4,9 @@
  * It also accumulates them so they can be replayed. E.g., by a new client that wants to get up to speed with the rest
  */
 (function($) {
+	window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
+	window.URL = window.URL || window.webkitURL
+
 	Slydes.Worker = jQuery.extend({}, {
 		create: function() {
 			/**
@@ -43,10 +46,8 @@
 				return
 			}
 			console.log("loading worker")
-			var mainString = this.__worker__.toString()
+			var mainString = __worker__.toString()
 			var bodyString     = mainString.substring( mainString.indexOf("{")+1, mainString.lastIndexOf("}") )
-			window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
-			window.URL = window.URL || window.webkitURL
 			var bb = new BlobBuilder()
 			bb.append(bodyString)
 			
