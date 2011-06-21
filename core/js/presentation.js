@@ -10,6 +10,13 @@
 		
 		create: function(options) {
 			var slides = $(".slyde")
+			
+			var controlToSelector = {
+				nextSlide: ".slydes-next-slide",
+				prevSlide: ".slydes-previous-slide",
+				start: 0,
+				end: slides.length - 1
+			}
 
 			jQuery.extend(this, {		
 				slides: slides,
@@ -23,10 +30,12 @@
 					to.slyde().transition(from)
 				},
 				
-				to: function(arg) {
-					var other = typeof arg === "number" ? $(slides[arg]) : slides.filter(arg)
+				slide: function(arg) {
+					var selector = controlToSelector[arg],
+						current = this.current,
+						other = typeof selector === "number" ? $(slides[selector]) : slides.filter(selector)
 					if (other.length > 0) {
-						this.transition(this.current, other)
+						this.transition(current, other)
 						this.setCurrent(other)
 					}
 					return other
