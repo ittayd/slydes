@@ -47,9 +47,23 @@
 						var index = this.current.slyde().index
 						$(slides[index-1]).removeClass("slydes-previous-slide")
 						$(slides[index+1]).removeClass("slydes-next-slide")
+
+						// iterate from index to slideIndex (both forward and backward) and change the classes in between
+						var slideIndex = slide.slyde().index,
+							sign = slideIndex > index ? 1 : -1,
+							oldcls = sign == 1 ? 'slydes-future-slide' : 'slydes-past-slide',
+							newcls = sign == 1 ? 'slydes-past-slide' : 'slydes-future-slide',
+							span = (slideIndex - index) * sign
+
+						for(var i = 0, j = 0; i < span; i++, j = i * sign) {
+							$(slides[j + index]).removeClass(oldcls).addClass(newcls)
+						}
 					}
+
 					this.current = slide
 					this.current.addClass("slydes-current-slide")
+					this.current.removeClass("slydes-past-slide")
+					this.current.removeClass("slydes-future-slide")
 					var index = this.current.slyde().index
 					$(slides[index-1]).addClass("slydes-previous-slide")
 					$(slides[index+1]).addClass("slydes-next-slide")
