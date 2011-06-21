@@ -26,7 +26,7 @@ Slydes = jQuery.extend(Slydes, {
 	 */
 	loadCss: function(url, success, options) {
 		var options = typeof success == 'object' ? success : options,
-			options = jQuery.extend({idprefix: 'css-load-track-id', delay: 100, limit: 200}, options),
+			options = jQuery.extend({idprefix: 'css-load-track-id', delay: 10, limit: 200}, options),
 			id = options.idprefix + (new Date().getTime()),
 			link = jQuery('<link/>').attr({
 					rel: 'stylesheet',

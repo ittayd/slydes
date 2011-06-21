@@ -28,3 +28,14 @@ body {
 	-moz-transition: left 1s ease-in-out;
 }
 
+.slydes-step {
+	-moz-transition: opacity 1s ease-in-out;
+}
+
+.slydes-future-step {
+	opacity: 0;
+}
+
+.slydes-past-step {
+	opacity: 1;
+}

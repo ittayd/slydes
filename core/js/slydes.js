@@ -99,7 +99,7 @@ function Slydes_setup() {
 		}
 	})
 	Slydes.import('main', function() {
-		Slydes.setup($)
+		Slydes.setup()
 	})
 	
 	
