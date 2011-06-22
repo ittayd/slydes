@@ -18,25 +18,25 @@ Slydes.loadScript = function(url, success) {
 	script.src = url
 	script.type = "text/javascript"
 
-	var head = document.getElementsByTagName('head')[0],
-	done = false
-
 	// Attach handlers for all browsers
-	script.onload = script.onreadystatechange = function() {
-		if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) {
-			done = true
-
-			// callback function provided as param
-			if (typeof success == 'function') {
+	if (typeof success == 'function') {
+		script.onload = script.onreadystatechange = function() {
+			if (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete') {
 				success()
+	
+				script.onload = script.onreadystatechange = null
+				// head.removeChild(script)
 			}
-
-			script.onload = script.onreadystatechange = null
-			head.removeChild(script)
 		}
 	}
 
-	head.appendChild(script)
+	var addScript = function() {document.body.appendChild(script);}
+	
+	if (document.body == null) {
+		document.addEventListener('DOMContentLoaded', addScript, false)
+	} else {
+		addScript()
+	}
 
 }
 
@@ -47,6 +47,7 @@ if (typeof jQuery == 'undefined') {
 	}
 
 
+    
 	Slydes.loadScript(JQUERY_URL, function() {
 		if (typeof jQuery=='undefined') {
 			alert("Failed to load jquery from " + JQUERY_URL)

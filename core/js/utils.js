@@ -38,33 +38,29 @@ Slydes = jQuery.extend(Slydes, {
 			link.onload = success
 		} else {*/
 			if (typeof success == 'function') {
-				var checker = (function() {
-					var counter = 0
-	
-					return function() {
-					    var target = jQuery('#' + id)[0]
-					    if(target && target.sheet) {
-							var stylesheets = document.styleSheets
-							for(var i = 0; i < stylesheets.length; i++) {
-							    var file = stylesheets[i],
-							    	owner = file.ownerNode ? file.ownerNode : file.owningElement;
-							    
-							    if(owner && owner.id == id) {
-							      success()
-							      return
-							    }
-							}
-					    
-							if(counter++ > options.limit) {
-					          alert("failed to load css from " + url)
-					          return
-					        }
-					        
-					        setTimeout(checker, options.delay)
-					        return
-					    }
-					}
-				})();
+				var checker = function() {
+					var stylesheets = document.styleSheets
+					try {
+						for(var i = 0, len = stylesheets.length; i < len; i++) {
+						    var file = stylesheets[i],
+						    	owner = file.ownerNode ? file.ownerNode : file.owningElement;
+						    
+						    if(owner && owner.id == id) {
+								sheets[j].cssRules;
+								success()
+								return
+						    }
+						}
+					} catch (e) {}
+			    
+					if(counter++ > options.limit) {
+			          alert("failed to load css from " + url)
+			          return
+			        }
+			        
+			        setTimeout(checker, options.delay)
+			        return
+			    }
 				checker()
 			}
 		/*}*/
