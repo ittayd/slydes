@@ -1,0 +1,21 @@
+#slydes-content {
+	-moz-transition: width 1s ease-in-out;
+	width: 100%;
+	float: left;
+}
+
+#slydes-sidebar {
+	-moz-transition: width 1s ease-in-out;
+	float: right;
+	width: 0%;
+	height: 100%;
+	overflow: hidden;
+}
+
+#slydes-content.slydes-sidebar-show {
+	width: 65%
+}
+
+#slydes-sidebar.slydes-sidebar-show {
+	width: 35%
+}

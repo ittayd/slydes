@@ -19,6 +19,8 @@ jQuery('document').ready(function($){
 		Slydes.ready(function(presentation){
 			presentation.slides.width(frameWidth)
 			presentation.slides.appendTo(strip)
+			frame.appendTo(presentation.content)
+			strip.width(100 * presentation.slides.length + '%')
 			Slydes.Slide.prototype.transition = function(from) {
 				strip.css('left', -(this.index) * frameWidth)
 			}

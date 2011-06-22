@@ -21,6 +21,7 @@
 
 	Slydes.setup = function() {
 		Slydes.import('globals', 'utils', 'options', function() {
+			Slydes.loadCss(Slydes.base + "css/main.css")
 			Slydes.Plugins = {}
 			var plugins = Slydes.options.plugins 
 			if (plugins === undefined) {

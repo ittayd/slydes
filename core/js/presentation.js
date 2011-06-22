@@ -16,8 +16,22 @@
 					start: 0,
 					end: slides.length - 1
 				}
+			
+			$('body:not(:has(#slydes-content))').append('<div id="slydes-content"></div>')
+			slides.appendTo($('#slydes-content'))
 
-			jQuery.extend(this, {		
+			$('body:not(:has(#slydes-sidebar))').append('<div id="slydes-sidebar">sidebar</div>')
+			$('#slydes-sidebar:not(:has(#slydes-preview))').append('<iframe id="slydes-preview">preview</iframe>')
+
+			jQuery.extend(this, {	
+				presenterMode: false, 
+				
+				content: $('#slydes-content'), 
+				
+				preview: $('#slydes-preview'),
+				
+				sidebar: $('#slydes-sidebar'),
+				
 				slides: slides.each(function(index, element) {
 					$(element).data('slydes', new Slydes.Slide(index, element, Slydes.options.slide))
 				}),
@@ -44,6 +58,14 @@
 					if (other.length > 0) {
 						this.transition(current, other)
 						this.setCurrent(other)
+						if (this.presenterMode) {
+							if (arg == Slydes.control.nextSlide && other.slydes('.').index < slides.length - 1) {
+								this.previewSlydes.presentation.slide(arg)
+							}
+							if (arg == Slydes.control.prevSlide && other.slydes('.').index > 0) {
+								this.previewSlydes.presentation.slide(arg)
+							}
+						}
 					}
 					
 					return other
@@ -75,6 +97,23 @@
 					var index = this.current.slydes('.').index
 					$(slides[index-1]).addClass("slydes-previous-slide")
 					$(slides[index+1]).addClass("slydes-next-slide")
+				},
+				
+				togglePresenterMode: function() {
+					this.presenterMode = !this.presenterMode
+					this.sidebar.toggleClass('slydes-sidebar-show')
+					this.content.toggleClass('slydes-sidebar-show')
+					this.preview.attr('src', this.presenterMode ? window.location.href : null)
+					if (this.presenterMode) {
+						var that = this
+						this.preview.bind('load', function(){
+							that.previewSlydes = that.preview[0].contentWindow.Slydes
+	
+							that.previewSlydes.ready(function(presentation){
+								presentation.slide("nextSlide")
+							})
+						})
+					}
 				}
 				
 				
