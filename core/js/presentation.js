@@ -41,9 +41,10 @@
 					to.slydes('.').transition(from)
 				},
 				
-				slide: function(arg) {
+				slide: function(arg, sync) {
 					var current = this.current
 					
+					if (!sync) this.sendSync({slide: arg})
 					if (arg == Slydes.control.nextStep || arg == Slydes.control.prevStep) {
 						var step = current.slydes('.').step(arg)
 						if (step.length) {
@@ -108,18 +109,42 @@
 						var that = this
 						this.preview.bind('load', function(){
 							that.previewSlydes = that.preview[0].contentWindow.Slydes
+							that.previewSlydes.controlled(true) // we don't want the preview to get all events, just the ones that we want
 	
 							that.previewSlydes.ready(function(presentation){
 								presentation.slide("nextSlide")
 							})
 						})
 					}
+				},
+				
+				synced: function(synced) {
+					if (Slydes.worker.port) {
+						if (synced) {
+							Slydes.worker.port.start()
+						} else {
+							Slydes.worker.port.close()
+						}
+					}
+				},
+				
+				handleSync: function(data) {
+					if (data.slide) {
+						this.slide(data.slide, true)
+					}
+				},
+				
+				sendSync: function(data) {
+					Slydes.worker.port.postMessage(data)
 				}
 				
 				
 
 			}, options)
+
+			Slydes.worker.create(function(event){Slydes.presentation.handleSync(event.data)})
 			
+			this.synced(true)
 			this.setCurrent(this.slides.first())
 			defer.resolve(this)
 		}

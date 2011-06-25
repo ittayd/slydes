@@ -23,9 +23,9 @@
 #slydes-preview {
 	width: 100%;
 	height: 100%;
-	-moz-transform: scale(0.5, 0.5) translate(-50%, -50%);
-    -webkit-transform: scale(0.5, 0.5) translate(-50%, -50%);
-    -o-transform: scale(0.5, 0.5) translate(-50%, -50%);
-    transform: scale(0.5, 0.5) translate(-50%, -50%);
-    border: solid #ccc 10px;
+	-moz-transform: scale(0.85, 0.85); /* translate(-25%, -25%);*/
+    -webkit-transform: scale(0.85, 0.85) /* translate(-5%, -10%);*/
+    -o-transform: scale(0.85, 0.85); /*translate(-25%, -25%);*/
+    transform: scale(0.85, 0.85); /* translate(-25%, -25%);*/
+
 }
