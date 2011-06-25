@@ -132,7 +132,7 @@
 							if (data.events[i].slide) this.handleSync(data.events[i]) // go through the slide transitions (only)
 						}
 						if (this.slave) this.synced(false) // stop receiving events after initial sync
-					} else {
+					} else {				
 						console.error("unknown event: " + data)
 					}
 				},

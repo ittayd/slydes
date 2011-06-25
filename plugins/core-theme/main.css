@@ -25,10 +25,29 @@ body {
 	left: 0;
 	height: 100%;
 	-moz-transition: left 1s ease-in-out;
+	-webkit-transition: left 1s ease-in-out;
+	-o-transition: left 1s ease-in-out;
+	transition: left 1s ease-in-out;
 }
 
+.slydes-header {
+	position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: auto;
+}
+.slydes-footer {
+	position: absolute;
+	top: auto;
+	bottom: 0; 
+	width: 100%;
+}
 .slydes-step {
 	-moz-transition: opacity 1s ease-in-out;
+	-webkit-transition: opacity 1s ease-in-out;
+	-o-transition: opacity 1s ease-in-out;
+	transition: opacity 1s ease-in-out;
+
 }
 
 .slydes-future-step {

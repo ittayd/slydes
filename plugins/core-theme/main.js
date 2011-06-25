@@ -6,7 +6,9 @@ jQuery('document').ready(function($){
 	
 	
 	var frame = $('#slydes-frame'),
-		strip = $('#slydes-strip') 
+		strip = $('#slydes-strip'),
+		header = $('.slydes-header').detach(),
+		footer = $('.slydes-footer').detach()
 	
 	
 	if (!frame.hasClass('slydes-preset')) {
@@ -18,12 +20,24 @@ jQuery('document').ready(function($){
 		
 		Slydes.ready(function(presentation){
 			presentation.slides.width(frameWidth)
-			presentation.slides.appendTo(strip)
+			presentation.slides.map(function(index, element) {
+				var wrapper = jQuery('<div class="slydes-wrapper"></div>')
+				wrapper.append(header.clone())
+				wrapper.append($(element))
+				wrapper.append(footer.clone())
+				return wrapper[0]
+			}).appendTo(strip)
+			
 			frame.appendTo(presentation.content)
+//			frame.append(header)
+//			frame.append(footer)
 			strip.width(100 * presentation.slides.length + '%')
 			Slydes.Slide.prototype.transition = function(from) {
 				strip.css('left', -(this.index) * frameWidth)
 			}
+			
+			presentation.slides.find('>:first-child').before(header.clone())
+			presentation.slides.append(footer.clone())
 		})
 	}
 	
