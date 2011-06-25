@@ -122,6 +122,7 @@
 					if (Slydes.worker.port) {
 						if (synced) {
 							Slydes.worker.port.start()
+							Slydes.worker.port.postMessage({events:true})
 						} else {
 							Slydes.worker.port.close()
 						}
@@ -131,6 +132,13 @@
 				handleSync: function(data) {
 					if (data.slide) {
 						this.slide(data.slide, true)
+					} else if (data.events) {
+						for (var i = 0, len = data.events.length; i < len; i++) {
+							this.handleSync(data.events[i])
+						}
+					} else {
+					
+						alert("unknown event: " + data)
 					}
 				},
 				
@@ -144,9 +152,10 @@
 
 			Slydes.worker.create(function(event){Slydes.presentation.handleSync(event.data)})
 			
-			this.synced(true)
 			this.setCurrent(this.slides.first())
 			defer.resolve(this)
+
+			this.synced(true)
 		}
 	}
 	$.each(Slydes.readyCallbacks, function(i, c) {
