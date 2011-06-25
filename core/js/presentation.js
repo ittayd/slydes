@@ -40,8 +40,8 @@
 					from.exitFocus
 					to.slydes('.').transition(from)
 				},
-				
-				slide: function(arg, sync) {
+
+				__slide: function(arg, sync) {
 					var current = this.current
 					
 					if (!this.slave && (sync === undefined || sync)) this.sendSync({slide: arg})
@@ -63,6 +63,16 @@
 						this.setCurrent(other)
 					}
 					
+					return other
+				},
+				
+				slide: function(arg, sync) {
+					var current = this.current
+					var other = this.__slide(arg, sync)
+					if (other.length > 0) {
+						current.trigger('past')
+						other.trigger('focused')
+					}
 					return other
 				},
 				
@@ -149,7 +159,7 @@
 			this.setCurrent(this.slides.first())
 			this.synced(true)
 
-			defer.resolve(this)
+			defer.resolve(this, $)
 		}
 	}
 	$.each(Slydes.readyCallbacks, function(i, c) {

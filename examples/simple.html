@@ -19,13 +19,23 @@
 			<h1>First</h1>
 			This is the first slide
 		</article>
-		<article class="slyde">
+		<article id="second" class="slyde">
 			<h1>Second</h1>
-			This is the second slide
+			<p id="second_text">This is the second slide</p>
 			<ul>
 				<li class="slydes-step">hello</li>
 				<li class="slydes-step">world</li>
 			</ul>
+			<script>
+			Slydes.ready(function(presentation, $){
+				$('#second_text').hide()
+				$('#second').bind({
+					'focused': function(){
+						$('#second_text').delay(1000).show('slow')
+					}
+				})
+			})
+			</script>
 		</article>
 		<article class="slyde">
 			<h1>Third</h1>
