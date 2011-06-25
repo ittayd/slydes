@@ -12,7 +12,7 @@
 				worker.port.addEventListener('error', function(event){
 				    throw new Error(event.message + " (" + event.filename + ":" + event.lineno + ")");
 				}, false);
-				worker.port.addEventListener('message', callback, false)
+				worker.port.onmessage = callback
 				worker.port.start()
 				Slydes.worker = worker
 			} catch(e){

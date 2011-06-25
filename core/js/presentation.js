@@ -44,7 +44,9 @@
 				slide: function(arg, sync) {
 					var current = this.current
 					
-					if (!sync) this.sendSync({slide: arg})
+					if (!this.slave && (sync === undefined || sync)) this.sendSync({slide: arg})
+					if (this.presenterMode) this.previewSlydes.presentation.slide(arg)
+
 					if (arg == Slydes.control.nextStep || arg == Slydes.control.prevStep) {
 						var step = current.slydes('.').step(arg)
 						if (step.length) {
@@ -59,14 +61,6 @@
 					if (other.length > 0) {
 						this.transition(current, other)
 						this.setCurrent(other)
-						if (this.presenterMode) {
-							if (arg == Slydes.control.nextSlide && other.slydes('.').index < slides.length - 1) {
-								this.previewSlydes.presentation.slide(arg)
-							}
-							if (arg == Slydes.control.prevSlide && other.slydes('.').index > 0) {
-								this.previewSlydes.presentation.slide(arg)
-							}
-						}
 					}
 					
 					return other
@@ -109,10 +103,10 @@
 						var that = this
 						this.preview.bind('load', function(){
 							that.previewSlydes = that.preview[0].contentWindow.Slydes
-							that.previewSlydes.controlled(true) // we don't want the preview to get all events, just the ones that we want
 	
 							that.previewSlydes.ready(function(presentation){
-								presentation.slide("nextSlide")
+								presentation.slave = true
+								presentation.slide("nextStep")
 							})
 						})
 					}
@@ -124,26 +118,27 @@
 							Slydes.worker.port.start()
 							Slydes.worker.port.postMessage({events:true})
 						} else {
-							Slydes.worker.port.close()
+							Slydes.worker.port.close() // doesn't seem to work
+							Slydes.worker.port.onmessage = null
 						}
 					}
 				},
 				
 				handleSync: function(data) {
 					if (data.slide) {
-						this.slide(data.slide, true)
+						this.slide(data.slide, false)
 					} else if (data.events) {
 						for (var i = 0, len = data.events.length; i < len; i++) {
-							this.handleSync(data.events[i])
+							if (data.events[i].slide) this.handleSync(data.events[i]) // go through the slide transitions (only)
 						}
+						if (this.slave) this.synced(false) // stop receiving events after initial sync
 					} else {
-					
-						alert("unknown event: " + data)
+						console.error("unknown event: " + data)
 					}
 				},
 				
 				sendSync: function(data) {
-					Slydes.worker.port.postMessage(data)
+					if (Slydes.worker.port) Slydes.worker.port.postMessage(data)
 				}
 				
 				
@@ -151,11 +146,10 @@
 			}, options)
 
 			Slydes.worker.create(function(event){Slydes.presentation.handleSync(event.data)})
-			
 			this.setCurrent(this.slides.first())
-			defer.resolve(this)
-
 			this.synced(true)
+
+			defer.resolve(this)
 		}
 	}
 	$.each(Slydes.readyCallbacks, function(i, c) {
