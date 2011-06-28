@@ -3,6 +3,7 @@
 		create: function(callback) {
 			if (typeof SharedWorker != 'function' ) {
 				Slydes.notice('This browser does not support synchronization of presentation windows')
+				Slydes.worker = undefined
 				return
 			}
 			console.log("loading worker")
@@ -12,7 +13,7 @@
 				worker.port.addEventListener('error', function(event){
 				    throw new Error(event.message + " (" + event.filename + ":" + event.lineno + ")");
 				}, false);
-				worker.port.onmessage = callback
+				worker.port.addEventListener('message', callback, false)
 				worker.port.start()
 				Slydes.worker = worker
 			} catch(e){

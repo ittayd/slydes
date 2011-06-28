@@ -38,29 +38,30 @@ Slydes = jQuery.extend(Slydes, {
 			link.onload = success
 		} else {*/
 			if (typeof success == 'function') {
-				var checker = function() {
-					var stylesheets = document.styleSheets
-					try {
-						for(var i = 0, len = stylesheets.length; i < len; i++) {
-						    var file = stylesheets[i],
-						    	owner = file.ownerNode ? file.ownerNode : file.owningElement;
-						    
-						    if(owner && owner.id == id) {
-								sheets[j].cssRules;
-								success()
-								return
-						    }
-						}
-					} catch (e) {}
-			    
-					if(counter++ > options.limit) {
-			          alert("failed to load css from " + url)
-			          return
-			        }
-			        
-			        setTimeout(checker, options.delay)
-			        return
-			    }
+				var counter = 0,
+					checker = function() {
+						var stylesheets = document.styleSheets
+						try {
+							for(var i = 0, len = stylesheets.length; i < len; i++) {
+							    var file = stylesheets[i],
+							    	owner = file.ownerNode ? file.ownerNode : file.owningElement;
+							    
+							    if(owner && owner.id == id) {
+									sheets[j].cssRules;
+									success()
+									return
+							    }
+							}
+						} catch (e) {}
+				    
+						if(counter++ > options.limit) {
+				          alert("failed to load css from " + url)
+				          return
+				        }
+				        
+				        setTimeout(checker, options.delay)
+				        return
+				    }
 				checker()
 			}
 		/*}*/
@@ -102,7 +103,17 @@ Slydes = jQuery.extend(Slydes, {
 			return supported
 		 
 		} 
-	})()
+	})(),
+	
+	ratio_43: function(width, height) {
+		var unit = Math.min(width / 4, height/ 3)
+		return {
+			width: Math.floor(unit * 4),
+			height: Math.floor(unit * 3)
+		}
+	}
+	
+	
 	
 })
 

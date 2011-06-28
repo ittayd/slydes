@@ -7,9 +7,11 @@ body {
 	padding:0;
 }
 
+.slydes-wrapper {
+	float: left;
+}
 .slyde {
 	height: 100%;
-	float: left;
 }
 
 #slydes-frame {

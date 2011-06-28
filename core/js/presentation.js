@@ -3,6 +3,18 @@
  */
 (function($) {
 	var defer = $.Deferred()
+	function scale(elem, ratio) {
+		var dimension = Slydes.ratio_43($('body').width(), $('body').height()),
+			fit = Slydes.ratio_43($('body').width() * ratio, $('body').height()),
+			scale = fit.width / dimension.width
+		
+		elem.width(dimension.width)
+		elem.height(dimension.height)
+	
+		elem.css({'-webkit-transform': 'scale(' + scale + ',' + scale + ')',
+					  '-webkit-transform-origin': '0 0'})
+	}
+
 	Slydes.presentation = {
 		ready: function(callback) {
 			defer.promise().done(callback)
@@ -20,15 +32,12 @@
 			$('body:not(:has(#slydes-content))').append('<div id="slydes-content"></div>')
 			slides.appendTo($('#slydes-content'))
 
-			$('body:not(:has(#slydes-sidebar))').append('<div id="slydes-sidebar">sidebar</div>')
-			$('#slydes-sidebar:not(:has(#slydes-preview))').append('<iframe id="slydes-preview">preview</iframe>')
-
+			$('body:not(:has(#slydes-sidebar))').append('<div id="slydes-sidebar"></div>')
+			
 			jQuery.extend(this, {	
-				presenterMode: false, 
+				extendedMode: false, 
 				
 				content: $('#slydes-content'), 
-				
-				preview: $('#slydes-preview'),
 				
 				sidebar: $('#slydes-sidebar'),
 				
@@ -45,7 +54,7 @@
 					var current = this.current
 					
 					if (!this.slave && (sync === undefined || sync)) this.sendSync({slide: arg})
-					if (this.presenterMode) this.previewSlydes.presentation.slide(arg)
+					if (this.extendedMode) this.previewSlydes.presentation.slide(arg)
 
 					if (arg == Slydes.control.nextStep || arg == Slydes.control.prevStep) {
 						var step = current.slydes('.').step(arg)
@@ -104,32 +113,42 @@
 					$(slides[index+1]).addClass("slydes-next-slide")
 				},
 				
-				togglePresenterMode: function() {
-					this.presenterMode = !this.presenterMode
+				toggleExtendedMode: function() {
+					this.extendedMode = !this.extendedMode
 					this.sidebar.toggleClass('slydes-sidebar-show')
 					this.content.toggleClass('slydes-sidebar-show')
-					this.preview.attr('src', this.presenterMode ? window.location.href : null)
-					if (this.presenterMode) {
-						var that = this
-						this.preview.bind('load', function(){
-							that.previewSlydes = that.preview[0].contentWindow.Slydes
-	
-							that.previewSlydes.ready(function(presentation){
-								presentation.slave = true
-								presentation.slide("nextStep")
+					if (this.preview) {
+						
+						this.preview.attr('src', this.extendedMode ? window.location.href : null)
+						scale(this.content, this.extendedMode ? 0.65 : 1)
+						if (this.extendedMode) {
+							
+							var that = this
+							this.preview.bind('load', function(){
+								that.previewSlydes = that.preview[0].contentWindow.Slydes
+		
+								that.previewSlydes.ready(function(presentation){
+									presentation.slave = true
+									// if i do the next step immediately, then the css animation confuses chrome
+									that.sidebar.bind('webkitTransitionEnd', // opera - oTranstionEnd, firefox - transitioned
+											function(event) {
+												presentation.slide("nextStep")
+											}
+									)
+								})
 							})
-						})
+						}
 					}
 				},
 				
 				synced: function(synced) {
-					if (Slydes.worker.port) {
+					if (Slydes.worker) {
 						if (synced) {
 							Slydes.worker.port.start()
 							Slydes.worker.port.postMessage({events:true})
 						} else {
 							Slydes.worker.port.close() // doesn't seem to work
-							Slydes.worker.port.onmessage = null
+							Slydes.worker.port.removeEventListener('message', this.__workerListener, false)
 						}
 					}
 				},
@@ -148,17 +167,26 @@
 				},
 				
 				sendSync: function(data) {
-					if (Slydes.worker.port) Slydes.worker.port.postMessage(data)
+					if (Slydes.worker) Slydes.worker.port.postMessage(data)
+				},
+				
+				__workerListener: function(event){
+					Slydes.presentation.handleSync(event.data)
 				}
 				
 				
 
 			}, options)
 
-			Slydes.worker.create(function(event){Slydes.presentation.handleSync(event.data)})
+			Slydes.worker.create(this.__workerListener)
+			if (Slydes.worker) {
+				$('#slydes-sidebar:not(:has(#slydes-preview))').append('<iframe id="slydes-preview">preview</iframe>')
+				this.preview =  $('#slydes-preview')
+				scale(this.preview, 0.35) // the width ratio in the CSS
+			}
 			this.setCurrent(this.slides.first())
 			this.synced(true)
-
+			
 			defer.resolve(this, $)
 		}
 	}

@@ -23,7 +23,7 @@
 			      evt.preventDefault()
 			      break
 			    case 80: // 'p'
-			      Slydes.presentation.togglePresenterMode()
+			      Slydes.presentation.toggleExtendedMode()
 	
 			}
 		});

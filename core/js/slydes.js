@@ -1,7 +1,6 @@
 /**
  * Main entry point
  */
-
 var JQUERY_URL = JQUERY_URL || 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js'
 
 var Slydes = {

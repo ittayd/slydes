@@ -10,16 +10,21 @@ jQuery('document').ready(function($){
 		header = $('.slydes-header').detach(),
 		footer = $('.slydes-footer').detach()
 	
-	
-	if (!frame.hasClass('slydes-preset')) {
-		var frameHeight = Math.floor($('body').height()),
-			frameWidth = Math.floor(frameHeight * 4 / 3)
-			
-		frame.height(frameHeight)
-		frame.width(frameWidth)
+	function resize() {
+		var dimension = Slydes.ratio_43($('#slydes-content').width(),$('#slydes-content').height())
 		
+		frame.height(dimension.height)
+		frame.width(dimension.width)
+	
+		Slydes.presentation.slides.width(dimension.width)
+		
+		Slydes.Slide.prototype.transition = function(from) {
+			strip.css('left', -(this.index) * dimension.width)
+		}
+	}
+
+	if (!frame.hasClass('slydes-preset')) {
 		Slydes.ready(function(presentation){
-			presentation.slides.width(frameWidth)
 			presentation.slides.map(function(index, element) {
 				var wrapper = jQuery('<div class="slydes-wrapper"></div>')
 				wrapper.append(header.clone())
@@ -32,12 +37,12 @@ jQuery('document').ready(function($){
 //			frame.append(header)
 //			frame.append(footer)
 			strip.width(100 * presentation.slides.length + '%')
-			Slydes.Slide.prototype.transition = function(from) {
-				strip.css('left', -(this.index) * frameWidth)
-			}
 			
-			presentation.slides.find('>:first-child').before(header.clone())
-			presentation.slides.append(footer.clone())
+//			presentation.slides.find('>:first-child').before(header.clone())
+//			presentation.slides.append(footer.clone())
+
+			resize()
+			$(window).bind('resize', resize)
 		})
 	}
 	
