@@ -15,7 +15,6 @@
 	transition: width 1s ease-in-out;
 	float: right;
 	width: 0%;
-	height: 100%;
 	overflow: hidden;
 	position: absolute;
 	top: 0;
@@ -31,12 +30,16 @@
 }
 
 #slydes-preview {
+	border: none;
+}
+
+#slydes-preview-wrapper {
 	border: 4px solid #000;
 	-moz-box-shadow:0 0 24px #333;
 	-webkit-box-shadow:0 0 20px #333;
 	box-shadow:0 0 20px #333;
-
 }
+
 /*#slydes-preview {
 	width: 100%;
 	height: 100%;

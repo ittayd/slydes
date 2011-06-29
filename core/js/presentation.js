@@ -11,8 +11,10 @@
 		elem.width(dimension.width)
 		elem.height(dimension.height)
 	
-		elem.css({'-webkit-transform': 'scale(' + scale + ',' + scale + ')',
-					  '-webkit-transform-origin': '0 0'})
+		elem.css({'-webkit-transform': 'scale(' + scale + ')',
+					  '-webkit-transform-origin': 'left top'})
+					  
+	    return scale // yuck. needed to fix chrome bug when scaling iframes
 	}
 
 	Slydes.presentation = {
@@ -120,7 +122,7 @@
 					if (this.preview) {
 						
 						this.preview.attr('src', this.extendedMode ? window.location.href : null)
-						scale(this.content, this.extendedMode ? 0.65 : 1)
+						scale(this.content, this.extendedMode ? 0.65 : 1, 1)
 						if (this.extendedMode) {
 							
 							var that = this
@@ -182,7 +184,17 @@
 			if (Slydes.worker) {
 				$('#slydes-sidebar:not(:has(#slydes-preview))').append('<iframe id="slydes-preview">preview</iframe>')
 				this.preview =  $('#slydes-preview')
-				scale(this.preview, 0.35) // the width ratio in the CSS
+				var scalex = scale(this.preview, 0.35) // the width ratio in the CSS
+				// fix wierd bug in chrome (12). it scales correctly, but clips the content in the amount of scale.
+				// so need to make the iframe larger so the clipping is done on an empty space
+				// need to put in div to be able to draw borders correctly
+				var div = $('<div id="slydes-preview-wrapper"></div>')
+				$('#slydes-sidebar').append(div)
+				this.preview.appendTo(div)
+				div.height(this.preview.height() * scalex)
+				div.css({overflow: 'hidden'})
+				this.preview.height(this.preview.height() / scalex)
+
 			}
 			this.setCurrent(this.slides.first())
 			this.synced(true)
