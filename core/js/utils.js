@@ -11,7 +11,7 @@ Slydes = jQuery.extend(Slydes, {
 		jQuery.each(query.match(/^\??(.*)$/)[1].split('&'), function(i, pair){
 			var keyval = pair.split('=')
 			keyval[0] = unescape(keyval[0])
-			keyval[1] = $.map(unescape(keyval[1]).replace(/\+/g, ' ').split(','), options.convert)
+			keyval[1] = jQuery.map(unescape(keyval[1]).replace(/\+/g, ' ').split(','), options.convert)
 			if (params[keyval[0]] === undefined) {
 				params[keyval[0]] = keyval[1].length == 1 ? keyval[1][0] : keyval[1]
 			} else {

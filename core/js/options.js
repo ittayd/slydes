@@ -3,11 +3,7 @@ jQuery.extend(Slydes, {
 		
 		var query = Slydes.script.src.replace(/^[^\?]+\??/,'')
 
-		if (!query) {
-			return {} // return empty object
-		}
-		
-		return Slydes.parseQuery(query)
+		return jQuery.extend({}, Slydes.parseQuery(), Slydes.parseQuery(query))
 	})()
 })
 

@@ -33,6 +33,8 @@
 			
 
 			jQuery.extend(this, {	
+				options: options, 
+				
 				extendedMode: false, 
 				
 				content: $('#slydes-content'), 
@@ -79,7 +81,7 @@
 					return other
 				},
 				
-				current: function(other, sync) {
+				current: function(other) {
 					if (other === undefined) {
 						return this.currentStep
 					}
@@ -124,7 +126,7 @@
 					current.trigger('past', other)
 					other.trigger('current', current)
 
-					if (sync === undefined || sync) {
+					if (!this.options.preview) {
 						this.syncCurrent(other)
 					}
 				},
@@ -148,8 +150,8 @@
 					this.sidebar.toggleClass('slydes-sidebar-show')
 					this.content.toggleClass('slydes-sidebar-show')
 					if (this.preview) {
-						
-						this.preview.attr('src', this.extendedMode ? window.location.href : null)
+						var previewUrl = window.location.href + (window.location.search.length == 0 ? "?" : "&") + "preview=true"
+						this.preview.attr('src', this.extendedMode ? previewUrl : null)
 						scale(this.content, this.extendedMode ? 0.65 : 1, 1)
 //						if (this.extendedMode) {
 //							
@@ -185,10 +187,13 @@
 				handleSync: function(data) {
 					if (data.current) {
 						var slide = this.slides.eq(data.current.slide),
-							step = data.current.step == -1 ? slide : slide.slydes().steps.eq(data.current.step)
-						this.current(step, false)
+							step = data.current.step == -1 ? slide : slide.slydes().steps.eq(data.current.step),
+							current = this.options.preview ? step.slydes().step(Slydes.control.next) : step
+						this.current(current, false)
 					} else if (data.events) {
-						this.handleSync(data.events[data.events.length - 1])
+						if (data.events.length > 0) {
+							this.handleSync(data.events[data.events.length - 1])
+						}
 					} else {				
 						console.error("unknown event: " + data)
 					}
@@ -232,9 +237,10 @@
 				div.css({overflow: 'hidden'})
 				this.preview.height(this.preview.height() / scalex)
 
+				this.synced(true)
 			}
+			
 			this.current(this.slides.first())
-			this.synced(true)
 			
 			defer.resolve(this, $)
 		}
@@ -245,6 +251,6 @@
 	Slydes.ready = function(callback) {
 		Slydes.presentation.ready(callback)
 	}
-	$('document').ready(function(){Slydes.presentation.create()})
+	$('document').ready(function(){Slydes.presentation.create(Slydes.options)})
 
 })(jQuery)
