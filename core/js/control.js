@@ -1,7 +1,7 @@
 (function($){
 	Slydes.control = {}
 	
-	$.each(["nextStep", "prevStep", "nextSlide", "prevSlide", "start", "end"], function(index, key) {
+	$.each(["next", "previous", "nextSlide", "previousSlide", "start", "end"], function(index, key) {
 		Slydes.control[key] = key
 	})
 	
@@ -12,14 +12,14 @@
 			    case 13: // Enter
 			    case 32: // space
 			    case 34: // PgDn
-			      Slydes.presentation.slide(Slydes.control.nextStep)
+			      Slydes.presentation.slide(Slydes.control.next)
 			      evt.preventDefault()
 			      break;
 		
 			    case 37: // left arrow
 			    case 8: // Backspace
 			    case 33: // PgUp
-				  Slydes.presentation.slide(Slydes.control.prevStep)
+				  Slydes.presentation.slide(Slydes.control.previous)
 			      evt.preventDefault()
 			      break
 			    case 80: // 'p'

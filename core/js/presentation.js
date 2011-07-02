@@ -23,19 +23,15 @@
 		},
 		
 		create: function(options) {
-			var slides = $(".slyde").addClass('slydes-future-slide'), 
-				controlToSelector = {
-					nextSlide: ".slydes-next-slide",
-					prevSlide: ".slydes-previous-slide",
-					start: 0,
-					end: slides.length - 1
-				}
+			var slides = $(".slyde").addClass('slydes-future'),
+				presentation = this
 			
 			$('body:not(:has(#slydes-content))').append('<div id="slydes-content"></div>')
 			slides.appendTo($('#slydes-content'))
 
 			$('body:not(:has(#slydes-sidebar))').append('<div id="slydes-sidebar"></div>')
 			
+
 			jQuery.extend(this, {	
 				extendedMode: false, 
 				
@@ -44,75 +40,110 @@
 				sidebar: $('#slydes-sidebar'),
 				
 				slides: slides.each(function(index, element) {
-					$(element).data('slydes', new Slydes.Slide(index, element, Slydes.options.slide))
+					$(element).data('slydes', new Slydes.Slide(index, $(element), presentation, Slydes.options.slide))
 				}),
+				
+				currentStep: slides.first().addClass('slydes-current'),
 				
 				transition: function(from, to) {
 					from.exitFocus
-					to.slydes('.').transition(from)
+					to.slydes().transition(from)
 				},
 
-				__slide: function(arg, sync) {
-					var current = this.current
-					
-					if (!this.slave && (sync === undefined || sync)) this.sendSync({slide: arg})
-					if (this.extendedMode) this.previewSlydes.presentation.slide(arg)
+				slide: function(arg,dryrun) {
+					var current = this.current(),
+						other
 
-					if (arg == Slydes.control.nextStep || arg == Slydes.control.prevStep) {
-						var step = current.slydes('.').step(arg)
-						if (step.length) {
-							return step
-						}
-						arg = arg == Slydes.control.nextStep ? Slydes.control.nextSlide : Slydes.control.prevSlide
+					if (typeof arg === 'number') {
+						other = this.slides.eq(arg)
+					} else switch (arg) {
+					    case Slydes.control.nextSlide:
+					    	other = this.slides.eq(current.slydes().index + 1)
+					    	break
+					    case Slydes.control.previousSlide:
+					    	var newIndex = current.slydes().index - 1
+					    	if (newIndex < 0) {
+					    		return $()
+					    	}
+					    	other = this.slides.eq(newIndex)
+					    	break
+						case Slydes.control.start: 
+							other = this.slides.first()
+							break;
+						case Slydes.control.end: 
+							other = this.slides.last()
+							break;
+						default:    
+							other = current.slydes().step(arg, dryrun)
 					}
 
-					var	selector = controlToSelector[arg],
-						other = typeof selector === "number" ? $(slides[selector]) : slides.filter(selector)
-
-					if (other.length > 0) {
-						this.transition(current, other)
-						this.setCurrent(other)
+					if (dryrun === undefined || !dryrun) {
+						this.current(other)
 					}
-					
+
 					return other
 				},
 				
-				slide: function(arg, sync) {
-					var current = this.current
-					var other = this.__slide(arg, sync)
-					if (other.length > 0) {
-						current.trigger('past')
-						other.trigger('focused')
-					}
-					return other
-				},
-				
-				setCurrent: function(slide) {
-					if (this.current) {
-						this.current.removeClass("slydes-current-slide")
-						var index = this.current.slydes('.').index
-						$(slides[index-1]).removeClass("slydes-previous-slide")
-						$(slides[index+1]).removeClass("slydes-next-slide")
-						
-						// iterate from index to slideIndex (both forward and backward) and change the classes in between
-						var slideIndex = slide.slydes('.').index,
-							sign = slideIndex > index ? 1 : -1,
-							oldcls = sign == 1 ? 'slydes-future-slide' : 'slydes-past-slide',
-							newcls = sign == 1 ? 'slydes-past-slide' : 'slydes-future-slide',
-							span = (slideIndex - index) * sign
-								
-						for(var i = 0, j = 0; i < span; i++, j = i * sign) {
-							$(slides[j + index]).removeClass(oldcls).addClass(newcls)
-						}
+				current: function(other) {
+					if (other === undefined) {
+						return this.currentStep
 					}
 					
-					this.current = slide
-					this.current.addClass("slydes-current-slide")
-					this.current.removeClass("slydes-past-slide")
-					this.current.removeClass("slydes-future-slide")
-					var index = this.current.slydes('.').index
-					$(slides[index-1]).addClass("slydes-previous-slide")
-					$(slides[index+1]).addClass("slydes-next-slide")
+					if (other.length == 0) {
+						return
+					}
+
+					var current = this.currentStep
+					this.currentStep = other
+					
+					
+					current.removeClass('slydes-current')
+					current.slydes().step(Slydes.control.previous).removeClass('slydes-previous')
+					current.slydes().step(Slydes.control.next).removeClass('slydes-next')
+					
+					var iter = current,
+						forward = true 
+					
+					if (other.hasClass('slydes-past')) { // moved back
+						// going backward
+						forward = false
+					}
+					
+					while (!iter.equals(other)) {
+						iter.removeClass(forward ? 'slydes-future' : 'slydes-past')
+						iter.addClass(forward ? 'slydes-past' : 'slydes-future')
+						iter = iter.slydes().step(forward ? Slydes.control.next : Slydes.control.previous)
+					}
+					
+					other.addClass('slydes-current')
+					this.slides.removeClass('slydes-current-slide')
+					if (other.slydes().constructor == Slydes.Slide) {
+						other.addClass('slydes-current-slide')
+					} else {
+						other.slydes().slide.element.addClass('slydes-current-slide')
+					}
+					other.slydes().step(Slydes.control.previous, true).addClass('slydes-previous')
+					other.slydes().step(Slydes.control.next, true).addClass('slydes-next')
+					other.removeClass('slydes-past slydes-future slydes-previous slydes-next') // slydes-previous/slydes-next will happen if 'other' is the first/last step of the presentation
+
+					current.trigger('past')
+					other.trigger('current')
+
+					this.syncCurrent(other)
+				},
+				
+				before: function(slide) {
+					if (slide.slydes().index == 0) {
+						return slide
+					} 
+					return this.slides.eq(slide.slydes().index - 1)
+				},
+				
+				after: function(slide) {
+					if (slide.slydes().index == this.slides.length - 1) {
+						return slide
+					}
+					return this.slides.eq(slide.slydes().index + 1)
 				},
 				
 				toggleExtendedMode: function() {
@@ -123,23 +154,22 @@
 						
 						this.preview.attr('src', this.extendedMode ? window.location.href : null)
 						scale(this.content, this.extendedMode ? 0.65 : 1, 1)
-						if (this.extendedMode) {
-							
-							var that = this
-							this.preview.bind('load', function(){
-								that.previewSlydes = that.preview[0].contentWindow.Slydes
-		
-								that.previewSlydes.ready(function(presentation){
-									presentation.slave = true
-									// if i do the next step immediately, then the css animation confuses chrome
-									that.sidebar.bind('webkitTransitionEnd', // opera - oTranstionEnd, firefox - transitioned
-											function(event) {
-												presentation.slide("nextStep")
-											}
-									)
-								})
-							})
-						}
+//						if (this.extendedMode) {
+//							
+//							var that = this
+//							this.preview.bind('load', function(){
+//								that.previewSlydes = that.preview[0].contentWindow.Slydes
+//		
+//								that.previewSlydes.ready(function(presentation){
+//									// if i do the next step immediately, then the css animation confuses chrome
+//									that.sidebar.bind('webkitTransitionEnd', // opera - oTranstionEnd, firefox - transitioned
+//											function(event) {
+//												presentation.slide("nextStep")
+//											}
+//									)
+//								})
+//							})
+//						}
 					}
 				},
 				
@@ -156,13 +186,10 @@
 				},
 				
 				handleSync: function(data) {
-					if (data.slide) {
-						this.slide(data.slide, false)
+					if (data.current) {
+						this.current($(data.current.selector))
 					} else if (data.events) {
-						for (var i = 0, len = data.events.length; i < len; i++) {
-							if (data.events[i].slide) this.handleSync(data.events[i]) // go through the slide transitions (only)
-						}
-						if (this.slave) this.synced(false) // stop receiving events after initial sync
+						this.handleSync(data.events[data.events.length - 1])
 					} else {				
 						console.error("unknown event: " + data)
 					}
@@ -170,6 +197,16 @@
 				
 				sendSync: function(data) {
 					if (Slydes.worker) Slydes.worker.port.postMessage(data)
+				},
+				
+				syncCurrent: function(current) {
+					this.sendSync({
+						current: {
+							type: current.slydes().constructor.name,
+							selector: current.selector
+						}
+					})
+
 				},
 				
 				__workerListener: function(event){
@@ -196,7 +233,7 @@
 				this.preview.height(this.preview.height() / scalex)
 
 			}
-			this.setCurrent(this.slides.first())
+			this.current(this.slides.first())
 			this.synced(true)
 			
 			defer.resolve(this, $)

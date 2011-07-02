@@ -9,9 +9,12 @@ body {
 
 .slydes-wrapper {
 	float: left;
+	overflow: hidden;
 }
 .slyde {
 	height: 100%;
+	word-wrap: break-word;
+	overflow: hidden;
 }
 
 #slydes-frame {

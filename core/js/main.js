@@ -2,23 +2,6 @@
  * Main starting point
  */
 (function($){
-	$.fn.slydes = function() {
-		var cmd = arguments[0],
-			args = Array.prototype.slice.call(arguments, 1)
-		
-		if (cmd == ".") {
-			return this.data('slydes')
-		}
-		
-		if (typeof cmd === "number") {
-			return $(this[cmd]).data('slydes')
-		}
-		
-		return this.map(function(){
-	      return $(this).data('slydes')
-		});
-	}
-
 	Slydes.setup = function() {
 		Slydes.import('globals', 'utils', 'options', function() {
 			Slydes.loadCss(Slydes.base + "css/main.css")

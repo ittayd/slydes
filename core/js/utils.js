@@ -117,5 +117,15 @@ Slydes = jQuery.extend(Slydes, {
 	
 })
 
+jQuery.fn.slydes = function() {
+	return this.data('slydes')
+}
+
+
+jQuery.fn.equals = function(other) {
+	return this.length === other.length && this.length === this.filter(other).length
+//	return this.selector == other.selector // selector not always set
+}
+
 Slydes.loadScript(Slydes.base + '../lib/jquery-notice/jquery.notice.js')
 Slydes.loadCss(Slydes.base + '../lib/jquery-notice/jquery.notice.css')
