@@ -79,7 +79,7 @@
 					return other
 				},
 				
-				current: function(other) {
+				current: function(other, sync) {
 					if (other === undefined) {
 						return this.currentStep
 					}
@@ -124,7 +124,9 @@
 					current.trigger('past', other)
 					other.trigger('current', current)
 
-					this.syncCurrent(other)
+					if (sync === undefined || sync) {
+						this.syncCurrent(other)
+					}
 				},
 				
 				before: function(slide) {
@@ -182,7 +184,9 @@
 				
 				handleSync: function(data) {
 					if (data.current) {
-						this.current($(data.current.selector))
+						var slide = this.slides.eq(data.current.slide),
+							step = data.current.step == -1 ? slide : slide.slydes().steps.eq(data.current.step)
+						this.current(step, false)
 					} else if (data.events) {
 						this.handleSync(data.events[data.events.length - 1])
 					} else {				
@@ -198,7 +202,8 @@
 					this.sendSync({
 						current: {
 							type: current.slydes().constructor.name,
-							selector: current.selector
+							slide: current.slydes().slide ? current.slydes().slide.index : current.slydes().index,
+							step: current.slydes().slide ? current.slydes().index : -1
 						}
 					})
 
