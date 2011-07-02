@@ -16,21 +16,20 @@ jQuery('document').ready(function($){
 		frame.height(dimension.height)
 		frame.width(dimension.width)
 	
-		Slydes.presentation.slides.width(dimension.width)
-		
-		Slydes.Slide.prototype.transition = function(from) {
-			strip.css('left', -(this.index) * dimension.width)
-		}
+		Slydes.presentation.slides.width(dimension.width).bind('current', function(other){
+			strip.css('left', -($(this).slydes().index) * dimension.width)
+		})
 	}
 
 	if (!frame.hasClass('slydes-preset')) {
 		Slydes.ready(function(presentation){
-			presentation.slides.map(function(index, element) {
-				var wrapper = jQuery('<div class="slydes-wrapper"></div>')
-				wrapper.append(header.clone())
-				wrapper.append($(element))
-				wrapper.append(footer.clone())
-				return wrapper[0]
+			presentation.slides.each(function(index, element) {
+				// var wrapper = jQuery('<div class="slydes-wrapper"></div>')
+				element = $(element)
+				element.prepend(header.clone())
+//				wrapper.append($(element))
+				element.append(footer.clone())
+				return element[0]
 			}).appendTo(strip)
 			
 			frame.appendTo(presentation.content)

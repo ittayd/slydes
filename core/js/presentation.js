@@ -45,11 +45,6 @@
 				
 				currentStep: slides.first().addClass('slydes-current'),
 				
-				transition: function(from, to) {
-					from.exitFocus
-					to.slydes().transition(from)
-				},
-
 				slide: function(arg,dryrun) {
 					var current = this.current(),
 						other
@@ -126,8 +121,8 @@
 					other.slydes().step(Slydes.control.next, true).addClass('slydes-next')
 					other.removeClass('slydes-past slydes-future slydes-previous slydes-next') // slydes-previous/slydes-next will happen if 'other' is the first/last step of the presentation
 
-					current.trigger('past')
-					other.trigger('current')
+					current.trigger('past', other)
+					other.trigger('current', current)
 
 					this.syncCurrent(other)
 				},

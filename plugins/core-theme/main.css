@@ -7,14 +7,11 @@ body {
 	padding:0;
 }
 
-.slydes-wrapper {
-	float: left;
-	overflow: hidden;
-}
 .slyde {
 	height: 100%;
 	word-wrap: break-word;
 	overflow: hidden;
+	float: left;
 }
 
 #slydes-frame {
@@ -36,17 +33,17 @@ body {
 }
 
 .slydes-header {
-	position: absolute;
     width: 100%;
     top: 0;
     bottom: auto;
 }
+
 .slydes-footer {
-	position: absolute;
 	top: auto;
 	bottom: 0; 
 	width: 100%;
 }
+
 .slydes-step {
 	-moz-transition: opacity 1s ease-in-out;
 	-webkit-transition: opacity 1s ease-in-out;
@@ -55,10 +52,10 @@ body {
 
 }
 
-.slydes-future-step {
+.slydes-step.slydes-future{
 	opacity: 0;
 }
 
-.slydes-past-step {
+.slydes-step.slydes-current {
 	opacity: 1;
 }
