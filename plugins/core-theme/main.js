@@ -32,7 +32,7 @@ jQuery('document').ready(function($){
 					index: index,
 					total: presentation.slides.length,
 					element: element
-				}
+				} 
 				element.prepend(header.tmpl(data))
 //				wrapper.append($(element))
 				element.append(footer.tmpl(data))

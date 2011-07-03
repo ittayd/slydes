@@ -16,6 +16,10 @@ body {
 	float: left;
 }
 
+.slyde .slydes-notes {
+	display: none;
+}
+
 #slydes-frame {
 	position: relative;
 	margin: 0 auto;
@@ -43,7 +47,7 @@ body {
 .slydes-footer {
 	position: absolute;
 	top: auto;
-	bottom: 0px;
+	bottom: 0px; 
 	width: 100%;
 }
 

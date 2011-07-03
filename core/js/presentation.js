@@ -30,6 +30,7 @@
 			slides.appendTo($('#slydes-content'))
 
 			$('body:not(:has(#slydes-sidebar))').append('<div id="slydes-sidebar"></div>')
+			$('#slydes-sidebar:not(:has(#slydes-notes))').append('<div id="slydes-notes"></div>')
 			
 
 			jQuery.extend(this, {	
@@ -114,15 +115,15 @@
 					
 					other.addClass('slydes-current')
 					this.slides.removeClass('slydes-current-slide')
-					if (other.slydes().constructor == Slydes.Slide) {
-						other.addClass('slydes-current-slide')
-					} else {
-						other.slydes().slide.element.addClass('slydes-current-slide')
-					}
+					this.getSlide(other).addClass('slydes-current-slide')
 					other.slydes().step(Slydes.control.previous, true).addClass('slydes-previous')
 					other.slydes().step(Slydes.control.next, true).addClass('slydes-next')
 					other.removeClass('slydes-past slydes-future slydes-previous slydes-next') // slydes-previous/slydes-next will happen if 'other' is the first/last step of the presentation
 
+					if (this.extendedMode) {
+						this.showNotes(this.getSlide(other))
+						
+					}
 					current.trigger('past', other)
 					other.trigger('current', current)
 
@@ -153,23 +154,21 @@
 						var previewUrl = window.location.href + (window.location.search.length == 0 ? "?" : "&") + "preview=true"
 						this.preview.attr('src', this.extendedMode ? previewUrl : null)
 						scale(this.content, this.extendedMode ? 0.65 : 1, 1)
-//						if (this.extendedMode) {
-//							
-//							var that = this
-//							this.preview.bind('load', function(){
-//								that.previewSlydes = that.preview[0].contentWindow.Slydes
-//		
-//								that.previewSlydes.ready(function(presentation){
-//									// if i do the next step immediately, then the css animation confuses chrome
-//									that.sidebar.bind('webkitTransitionEnd', // opera - oTranstionEnd, firefox - transitioned
-//											function(event) {
-//												presentation.slide("nextStep")
-//											}
-//									)
-//								})
-//							})
-//						}
 					}
+					if (this.extendedMode) {
+						this.showNotes(this.getSlide())
+					}
+				},
+
+				showNotes: function(element) {
+					var notes = this.sidebar.children('#slydes-notes')
+					notes.children().remove()
+					notes.append(element.children('.slydes-notes').clone())
+				},
+				
+				getSlide: function(element) {
+					element = element || this.currentStep
+					return element.slydes().constructor == Slydes.Slide ? element : element.slydes().slide.element
 				},
 				
 				synced: function(synced) {
@@ -231,7 +230,7 @@
 				// so need to make the iframe larger so the clipping is done on an empty space
 				// need to put in div to be able to draw borders correctly
 				var div = $('<div id="slydes-preview-wrapper"></div>')
-				$('#slydes-sidebar').append(div)
+				$('#slydes-sidebar').prepend(div)
 				this.preview.appendTo(div)
 				div.height(this.preview.height() * scalex)
 				div.css({overflow: 'hidden'})
