@@ -9,6 +9,8 @@ body {
 
 .slyde {
 	height: 100%;
+	min-height: 100%;
+	position: relative;
 	word-wrap: break-word;
 	overflow: hidden;
 	float: left;
@@ -39,8 +41,9 @@ body {
 }
 
 .slydes-footer {
+	position: absolute;
 	top: auto;
-	bottom: 0; 
+	bottom: 0px;
 	width: 100%;
 }
 
