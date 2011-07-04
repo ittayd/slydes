@@ -68,10 +68,7 @@ Slydes = jQuery.extend(Slydes, {
 	},
 	
 	notice: function(msg) {
-		jQuery.noticeAdd({
-            text: msg,
-            stay: false
-		});
+		jQuery.gritter.add({title: 'Notice', text: msg})
 	},
 	
 	/**
@@ -127,5 +124,5 @@ jQuery.fn.equals = function(other) {
 //	return this.selector == other.selector // selector not always set
 }
 
-Slydes.loadScript(Slydes.base + '../lib/jquery-notice/jquery.notice.js')
-Slydes.loadCss(Slydes.base + '../lib/jquery-notice/jquery.notice.css')
+Slydes.loadScript(Slydes.base + '../lib/jquery-gritter/js/jquery.gritter.js')
+Slydes.loadCss(Slydes.base + '../lib/jquery-gritter/css/jquery.gritter.css')
