@@ -221,7 +221,7 @@
 
 			}, options)
 
-			Slydes.worker.create(this.__workerListener)
+			Slydes.worker = Slydes.Worker.create(this.__workerListener)
 			if (Slydes.worker) {
 				$('#slydes-sidebar:not(:has(#slydes-preview))').append('<iframe id="slydes-preview">preview</iframe>')
 				this.preview =  $('#slydes-preview')
