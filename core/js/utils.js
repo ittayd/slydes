@@ -24,20 +24,25 @@ Slydes = jQuery.extend(Slydes, {
 	/** 
 	 * Accoring to: http://yearofmoo.com/2011/03/cross-browser-stylesheet-preloading/
 	 */
-	loadCss: function(url, success, options) {
-		var options = typeof success == 'object' ? success : options,
+	loadCss: function(url, options, onload) {
+		var onload = typeof options == 'function' ? options : onload,
+			options = typeof options == 'function' ? {} : (options || {}),
 			options = jQuery.extend({idprefix: 'css-load-track-id', delay: 10, limit: 200}, options),
 			id = options.idprefix + (new Date().getTime()),
 			link = jQuery('<link/>').attr({
 					rel: 'stylesheet',
 					type: 'text/css',
 					href: url,
-					id: id}).appendTo('head')
+					id: id})
+					
+		options.head = options.head || true
+		options.before = options.before || Slydes.script
+		Slydes.addResource(link.get(0), options)
 					
 		/*if (this.isEventSupported(link, 'load')) {
 			link.onload = success
 		} else {*/
-			if (typeof success == 'function') {
+			if (typeof onload == 'function') {
 				var counter = 0,
 					checker = function() {
 						var stylesheets = document.styleSheets
@@ -48,7 +53,7 @@ Slydes = jQuery.extend(Slydes, {
 							    
 							    if(owner && owner.id == id) {
 									sheets[j].cssRules;
-									success()
+									onload()
 									return
 							    }
 							}
