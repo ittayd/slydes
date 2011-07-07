@@ -4,17 +4,21 @@
 (function($) {
 	var defer = $.Deferred()
 	function scale(elem, ratio) {
+		if (ratio === undefined) {
+			elem.width('').height('').css({'-webkit-transform': ''})
+			return
+		}
 		var dimension = Slydes.ratio_43($('body').width(), $('body').height()),
 			fit = Slydes.ratio_43($('body').width() * ratio, $('body').height()),
 			scale = fit.width / dimension.width
-		
+
 		elem.width(dimension.width)
 		elem.height(dimension.height)
 	
-		elem.css({'-webkit-transform': 'scale(' + scale + ')',
+		elem.css({'-webkit-transform': 'scale(' +  scale + ')',
 					  '-webkit-transform-origin': 'left top'})
-					  
-	    return scale // yuck. needed to fix chrome bug when scaling iframes
+		
+		console.log(elem[0].tagName + ": " + scale)
 	}
 
 	Slydes.presentation = {
@@ -122,11 +126,12 @@
 
 					if (this.extendedMode) {
 						this.showNotes(this.getSlide(other))
-						
 					}
+					
 					current.trigger('past', other)
 					other.trigger('current', current)
-
+					var encoded = this.encodeStep(other)
+					location.hash = encoded.slide + (encoded.step === undefined ? "" :  "." + encoded.step)
 					if (!this.options.preview) {
 						this.syncCurrent(other)
 					}
@@ -151,9 +156,9 @@
 					this.sidebar.toggleClass('slydes-sidebar-show')
 					this.content.toggleClass('slydes-sidebar-show')
 					if (this.preview) {
-						var previewUrl = window.location.href + (window.location.search.length == 0 ? "?" : "&") + "preview=true"
+						var previewUrl = location.href.substring(0, location.href.length - location.hash.length) + (location.search.length == 0 ? "?" : "&") + "preview=true" + (location.hash ? location.hash : "")
 						this.preview.attr('src', this.extendedMode ? previewUrl : null)
-						scale(this.content, this.extendedMode ? 0.65 : 1, 1)
+						scale(this.content, this.extendedMode ? 0.65 : undefined)
 					}
 					if (this.extendedMode) {
 						this.showNotes(this.getSlide())
@@ -183,10 +188,22 @@
 					}
 				},
 				
+				decodeStep: function(slide, step) {
+					var slide = this.slides.eq(parseInt(slide))
+					return step === undefined ? slide : slide.slydes().steps.eq(parseInt(step))
+				},
+				
+				encodeStep: function(step) {
+					return {
+						type: step.slydes().constructor.name,
+						slide: step.slydes().slide ? step.slydes().slide.index : step.slydes().index,
+						step: step.slydes().slide ? step.slydes().index : undefined
+					}
+				},
+				
 				handleSync: function(data) {
 					if (data.current) {
-						var slide = this.slides.eq(data.current.slide),
-							step = data.current.step == -1 ? slide : slide.slydes().steps.eq(data.current.step),
+						var step = this.decodeStep(data.current.slide, data.current.step)
 							current = this.options.preview ? step.slydes().step(Slydes.control.next) : step
 						this.current(current, false)
 					} else if (data.events) {
@@ -203,13 +220,7 @@
 				},
 				
 				syncCurrent: function(current) {
-					this.sendSync({
-						current: {
-							type: current.slydes().constructor.name,
-							slide: current.slydes().slide ? current.slydes().slide.index : current.slydes().index,
-							step: current.slydes().slide ? current.slydes().index : -1
-						}
-					})
+					this.sendSync({current: this.encodeStep(current)})
 
 				},
 				
@@ -225,23 +236,21 @@
 			if (Slydes.worker) {
 				$('#slydes-sidebar:not(:has(#slydes-preview))').append('<iframe id="slydes-preview">preview</iframe>')
 				this.preview =  $('#slydes-preview')
-				var scalex = scale(this.preview, 0.35) // the width ratio in the CSS
-				// fix wierd bug in chrome (12). it scales correctly, but clips the content in the amount of scale.
-				// so need to make the iframe larger so the clipping is done on an empty space
-				// need to put in div to be able to draw borders correctly
-				var div = $('<div id="slydes-preview-wrapper"></div>')
-				$('#slydes-sidebar').prepend(div)
-				this.preview.appendTo(div)
-				div.height(this.preview.height() * scalex)
-				div.css({overflow: 'hidden'})
-				this.preview.height(this.preview.height() / scalex)
-
+				$('#slydes-sidebar').prepend(this.preview)
+				scale(this.preview, 0.30)
+				var m = $('body').width() * 0.05 / 2
+				this.preview.css({'margin-left' : m})
 				this.synced(true)
 			}
 			
-			this.current(this.slides.first())
-			
+			var idx = (location.hash.substring(1) || "0").split("."),
+				step = this.decodeStep(idx[0], idx[1])
+
+			this.current(this.slides.first()) // init classes before 'ready' event
 			defer.resolve(this, $)
+
+			this.current(step)
+			
 		}
 	}
 	$.each(Slydes.readyCallbacks, function(i, c) {

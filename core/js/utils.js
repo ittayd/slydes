@@ -35,8 +35,7 @@ Slydes = jQuery.extend(Slydes, {
 					href: url,
 					id: id})
 					
-		options.head = options.head || true
-		options.before = options.before || Slydes.script
+		options = jQuery.extend({head: true, before: Slydes.script}, options)
 		Slydes.addResource(link.get(0), options)
 					
 		/*if (this.isEventSupported(link, 'load')) {
