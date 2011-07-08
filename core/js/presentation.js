@@ -234,9 +234,9 @@
 
 			Slydes.worker = Slydes.Worker.create(this.__workerListener)
 			if (Slydes.worker) {
-				$('#slydes-sidebar:not(:has(#slydes-preview))').append('<iframe id="slydes-preview">preview</iframe>')
+				$('#slydes-sidebar:not(:has(#slydes-preview))').prepend('<div><iframe id="slydes-preview">preview</iframe></div>')
 				this.preview =  $('#slydes-preview')
-				$('#slydes-sidebar').prepend(this.preview)
+				this.preview.parent().height($('#slydes-sidebar').height() / 2)
 				scale(this.preview, 0.30)
 				var m = $('body').width() * 0.05 / 2
 				this.preview.css({'margin-left' : m})
