@@ -143,8 +143,13 @@
 						this.showNotes(this.getSlide(other))
 					}
 					
-					current.trigger('past', other)
-					other.trigger('current', current)
+					function trigger(target, type, other) {
+						var e = jQuery.Event(type)
+						e.stopPropagation()
+						target.trigger(e, other)
+					}
+					trigger(current, forward ? 'past' : 'future', other)
+					trigger(other, 'current', current)
 					var encoded = this.encodeStep(other)
 					location.hash = encoded.slide + (encoded.step === undefined ? "" :  "." + encoded.step)
 					if (!this.options.preview) {
