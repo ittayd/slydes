@@ -41,7 +41,11 @@
 		
 		after: function(step) {
 			if (step.slydes().index == this.steps.length - 1) {
-				return this.presentation.after(this.element)
+				var candidate = this.presentation.after(this.element)
+				if (candidate.slydes() == this) {
+					return step
+				}
+				return candidate
 			}
 			return this.steps.eq(step.slydes().index + 1)
 		},

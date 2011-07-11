@@ -1,23 +1,25 @@
 /**
  * A model class representing the presentation 
  */
+
 (function($) {
 	var defer = $.Deferred()
 	function scale(elem, ratio) {
-		if (ratio === undefined) {
-			elem.width('').height('').css({'-webkit-transform': ''})
-			return
-		}
-		var dimension = Slydes.ratio_43($('body').width(), $('body').height()),
-			fit = Slydes.ratio_43($('body').width() * ratio, $('body').height()),
+		var w = $(window).width(),
+			h = $(window).height(),
+			dimension = Slydes.ratio_43(w, h),
+			fit = Slydes.ratio_43(w * (ratio === undefined ? 1 : ratio), h),
 			scale = fit.width / dimension.width
 
 		elem.width(dimension.width)
 		elem.height(dimension.height)
-	
-		elem.css({'-webkit-transform': 'scale(' +  scale + ')',
-					  '-webkit-transform-origin': 'left top'})
-		
+
+		if (ratio === undefined || ratio == 1) {
+			elem.css({'-webkit-transform': ''})
+		} else {
+			elem.css({'-webkit-transform': 'scale(' +  scale + ')',
+						  '-webkit-transform-origin': 'left top'})
+		}
 		console.log(elem[0].tagName + ": " + scale)
 	}
 
@@ -28,14 +30,27 @@
 		
 		create: function(options) {
 			var slides = $(".slyde").addClass('slydes-future'),
-				presentation = this
-			
+				presentation = this,
+				header = $('<script type="text/x-jquery-tmpl"></script>').append($('.slydes-header')),
+				footer = $('<script type="text/x-jquery-tmpl"></script>').append($('.slydes-footer'))
+				
 			$('body:not(:has(#slydes-content))').append('<div id="slydes-content"></div>')
 			slides.appendTo($('#slydes-content'))
 
 			$('body:not(:has(#slydes-sidebar))').append('<div id="slydes-sidebar"></div>')
 			$('#slydes-sidebar:not(:has(#slydes-notes))').append('<div id="slydes-notes"></div>')
 			
+			slides.each(function(index, element) {
+				element = $(element)
+				var data = {
+					index: index,
+					total: slides.length,
+					element: element
+				} 
+				element.prepend(header.tmpl(data))
+				element.append(footer.tmpl(data))
+			})
+
 
 			jQuery.extend(this, {	
 				options: options, 
@@ -158,7 +173,7 @@
 					if (this.preview) {
 						var previewUrl = location.href.substring(0, location.href.length - location.hash.length) + (location.search.length == 0 ? "?" : "&") + "preview=true" + (location.hash ? location.hash : "")
 						this.preview.attr('src', this.extendedMode ? previewUrl : null)
-						scale(this.content, this.extendedMode ? 0.65 : undefined)
+						this.resize()
 					}
 					if (this.extendedMode) {
 						this.showNotes(this.getSlide())
@@ -226,7 +241,13 @@
 				
 				__workerListener: function(event){
 					Slydes.presentation.handleSync(event.data)
+				},
+				
+				resize: function(){
+					scale(presentation.content, presentation.extendedMode ? 0.65 : undefined)
+					$('body').css('font-size', presentation.content.height() / 1000 + 'em')
 				}
+
 				
 				
 
@@ -243,6 +264,10 @@
 				this.synced(true)
 			}
 			
+			this.slides.appendTo(this.content)
+			$(window).bind('resize', this.resize)
+			this.resize()
+
 			var idx = (location.hash.substring(1) || "0").split("."),
 				step = this.decodeStep(idx[0], idx[1])
 
@@ -259,6 +284,8 @@
 	Slydes.ready = function(callback) {
 		Slydes.presentation.ready(callback)
 	}
+	Slydes.loadScript(Slydes.base + "../lib/jquery-tmpl/jquery.tmpl.js")
+
 	$('document').ready(function(){Slydes.presentation.create(Slydes.options)})
 
 })(jQuery)
