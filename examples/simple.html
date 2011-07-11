@@ -4,6 +4,22 @@
 		<meta charset="utf-8">
 		<title>Slydes</title>
 		<script src="../core/js/slydes.js"></script>
+		<style type="text/css">
+.slyde {font-size: 3em;}
+ul {
+	list-style: disc url(bullet1.gif) inside;	
+}
+
+ul ul {
+	list-style: disc url(bullet2.gif) inside;	
+	margin-left: 1em;
+}
+
+ul ul ul {
+	list-style: disc url(bullet3.gif) inside;	
+}
+
+		</style>
 	</head>
 	<body>
 		<div class="slydes-header">header</div>
@@ -21,16 +37,30 @@
 			<p id="second_text">This is the second slide</p>
 			<ul>
 				<li class="slydes-step">hello</li>
-				<li class="slydes-step">world</li>
+				<li class="slydes-step fly">world</li>
 			</ul>
 			<script>
 			Slydes.ready(function(presentation, $){
 				$('#second_text').hide()
 				$('#second').bind({
-					'focused': function(){
+					'current': function(){
 						$('#second_text').delay(1000).show('slow')
+					},
+					'future': function() {
+						$('#second_text').stop(true, true).hide()
 					}
 				})
+				$('.fly').css({opacity: 1, left: '100%', position: 'absolute'}).bind({
+					'current': function() {
+						$(this).animate({left: '0%'}, 1000)
+						return false;
+					},
+					'future': function() {
+						$(this).stop(true, true).css({left: '100%'})
+						return false;
+					}
+				})
+				
 			})
 			</script>
 		</article>
