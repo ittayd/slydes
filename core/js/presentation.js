@@ -145,7 +145,7 @@
 					
 					function trigger(target, type, other) {
 						var e = jQuery.Event(type)
-						e.stopPropagation()
+						e.stopPropagation() // otherwise, a slide will also catch events of a step...
 						target.trigger(e, other)
 					}
 					trigger(current, forward ? 'past' : 'future', other)
