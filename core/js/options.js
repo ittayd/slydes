@@ -7,3 +7,11 @@ jQuery.extend(Slydes, {
 	})()
 })
 
+	
+String.prototype.asArray = function() {
+	return [this]
+}
+
+Array.prototype.asArray = function() {
+	return this
+}

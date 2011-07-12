@@ -9,7 +9,14 @@
 			Slydes.Plugins = {}
 			var plugins = Slydes.options.plugins 
 			if (plugins === undefined) {
-				plugins = "core-theme"
+				plugins = ["core-theme", "prettify"] 
+			}
+			
+			for (var i = 0; i < plugins.length; i++) {
+				if (Slydes.options[plugins[i]] === 'off') {
+					plugins.splice(i, 1)
+					i--
+				}
 			}
 
 			if (plugins != "skip") {

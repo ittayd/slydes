@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Slydes</title>
-		<script src="../core/js/slydes.js"></script>
+		<script src="../core/js/slydes.js?prettify=scala"></script>
 		<style type="text/css">
 .slyde {font-size: 3em;}
 ul {
@@ -67,6 +67,12 @@ ul ul ul {
 		<article class="slyde">
 			<h1>Third</h1>
 			This is the third slide
+			<pre class="prettyprint">
+				trait HelloWorld extends Foo[Bar] {
+					var one: String = "hi"
+					def foo = one
+				}
+			</pre>
 		</article>
 		
 	<body>
