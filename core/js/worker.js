@@ -7,8 +7,8 @@
 			}
 			console.log("loading worker")
 
-			try {
-				var worker = new SharedWorker(Slydes.base + "js/worker_impl.js", 'slydes')
+			try {			
+				var worker = new SharedWorker(Slydes.base + "js/worker_impl.js", 'slydes:' + window.location.pathname)
 				worker.port.addEventListener('error', function(event){
 				    throw new Error(event.message + " (" + event.filename + ":" + event.lineno + ")");
 				}, false);
@@ -16,6 +16,7 @@
 				worker.port.start()
 				return worker
 			} catch(e){
+			    
 				var msg = 'Failed to create Web Worker - multi window presentations and presenter view disabled.<p> If running Chrome with local copy of Slydes, run it with --allow-file-access-from-files'
 				Slydes.notice(msg)
 				console.log(msg)

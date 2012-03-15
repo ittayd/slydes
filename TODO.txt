@@ -1,0 +1,16 @@
+slides are shown according to a path:
+- either linearization of all elements with 'step' class
+(- or specified by "pos=n" class (if = is a legal char. otherwise, :))
+- or programmatically, by changing the initial variable
+
+can use onEnter/onExit on steps and receive their position
+
+slides are loaded by the master container. this should solve stuff like same origin policies. can host in github...
+
+saving of notes: load original file, replace all "note" elements with current ones. 
+- how to add notes to slides that don't have them? maybe a separate notes div? link by path position? 
+
+passing options programatically (slydes.config({...})
+
+
+ 

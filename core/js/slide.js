@@ -1,9 +1,13 @@
 /**
  * Model class representing a slide
  */
+
+/*
 (function($){
 	Slydes.Slide = function Slide(index, element, presentation, options) {
-		var slide = this
+		var slide = this,
+			stepsReg = {}
+		
 		jQuery.extend(this, {
 			element: element,
 			
@@ -14,7 +18,24 @@
 			name: element.children("h1").length ? element.children("h1").text() : index.toString(),
 					
 			steps: element.find(".slydes-step").addClass('slydes-future').each(function(index, element){
-				$(element).data('slydes', new Slydes.Step(index, $(element), slide))
+				element = $(element)
+				var stepId = element.attr('step-id'),
+					step
+				if (stepId) {
+					var prev = stepsReg[stepId]
+					if (prev) {
+						prev.element = prev.element.add(element)
+						step = prev
+						
+					} else {
+						step = new Slydes.Step(index, element, slide)
+						stepsReg[stepId] = step
+					}
+				} else {
+					step = new Slydes.Step(index, element, slide)
+				}	
+					
+				element.data('slydes', step)
 			})
 			
 		}, options)
@@ -66,3 +87,4 @@
 	
 
 })(jQuery)
+*/

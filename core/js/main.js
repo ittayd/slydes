@@ -1,6 +1,23 @@
 /**
  * Main starting point
  */
+require.config({
+  paths: {
+    'lib': '../../lib',
+    'plugins': '../../plugins',
+
+    'underscore': '../../lib/underscore/1.3.1-amdjs/underscore', // AMD support
+    'css': '../../lib/curl/0.6.2/plugin/css',
+  }
+})
+
+require([
+    'app'
+], function(app) {
+    app.initialize()
+})
+
+/*
 (function($){
 	Slydes.setup = function() {
 		Slydes.import('globals', 'utils', 'options', function() {
@@ -37,4 +54,4 @@
 		Slydes.import('presentation', 'slide', 'worker', 'step', 'control', function() {})
 	}
 })(jQuery)
-
+*/

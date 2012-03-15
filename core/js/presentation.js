@@ -1,7 +1,21 @@
 /**
  * A model class representing the presentation 
  */
-
+define(function(require) {
+  var started = false,
+      readyCallbacks = []
+  return {
+    start: function start() {
+        started = true;
+        alert('started');
+    },
+    
+    ready: function ready(callback) {
+        readyCallbacks.push(callback);
+    }
+  }  
+})
+/*
 (function($) {
 	var defer = $.Deferred()
 	function scale(elem, ratio) {
@@ -294,3 +308,4 @@
 	$('document').ready(function(){Slydes.presentation.create(Slydes.options)})
 
 })(jQuery)
+*/

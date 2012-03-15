@@ -4,23 +4,8 @@
 		<meta charset="utf-8">
 		<title>Slydes</title>
 		<script src="../core/js/slydes.js?prettify=scala"></script>
-		<style type="text/css">
-.slyde {font-size: 3em;}
-ul {
-	list-style: disc url(bullet1.gif) inside;	
-}
-
-ul ul {
-	list-style: disc url(bullet2.gif) inside;	
-	margin-left: 1em;
-}
-
-ul ul ul {
-	list-style: disc url(bullet3.gif) inside;	
-}
-
-		</style>
-	</head>
+		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|Droid+Sans+Mono">
+<!-- 		<link rel="stylesheet" type="text/css" href="style.css"> -->	</head>
 	<body>
 		<div class="slydes-header">header</div>
 		<div class="slydes-footer">footer ${index + 1}/${total}</div>
@@ -40,39 +25,54 @@ ul ul ul {
 				<li class="slydes-step fly">world</li>
 			</ul>
 			<script>
-			Slydes.ready(function(presentation, $){
-				$('#second_text').hide()
-				$('#second').bind({
-					'current': function(){
-						$('#second_text').delay(1000).show('slow')
-					},
-					'future': function() {
-						$('#second_text').stop(true, true).hide()
-					}
-				})
-				$('.fly').css({opacity: 1, left: '100%', position: 'absolute'}).bind({
-					'current': function() {
-						$(this).animate({left: '0%'}, 1000)
-						return false;
-					},
-					'future': function() {
-						$(this).stop(true, true).css({left: '100%'})
-						return false;
-					}
-				})
-				
-			})
+            require(['presentation'], function(presentation) {
+                presentation.ready(function(presentation, $){
+                    $('#second_text').hide()
+                    $('#second').bind({
+                        'current': function(){
+                            console.log(arguments)
+                            $('#second_text').delay(1000).show('slow')
+                        },
+                        'future': function() {
+                            $('#second_text').stop(true, true).hide()
+                        }
+                    })
+                    $('.fly').css({opacity: 1, 'margin-left': '100%', position: 'absolute'}).bind({
+                        'current': function() {
+                            $(this).animate({'margin-left': '0%'}, 1000)
+                            return false;
+                        },
+                        'future': function() {
+                            $(this).stop(true, true).css({'margin-left': '100%'})
+                            return false;
+                        }
+                    })
+                    
+                })
+            })
 			</script>
 		</article>
 		<article class="slyde">
 			<h1>Third</h1>
 			This is the third slide
-			<pre class="prettyprint">
-				trait HelloWorld extends Foo[Bar] {
-					var one: String = "hi"
-					def foo = one
-				}
-			</pre>
+			<pre class="prettyprint slydes-step" id="code">
+trait HelloWorld extends Foo[Bar] {
+	var one: String = "hi"
+	def foo = one
+}</pre>
+			<script>
+            require(['presentation'], function(presentation) {
+                presentation.ready(function(presentation, $){
+				$('#code').css({opacity: 1}).hide().bind({
+					'current': function() {
+						$(this).slideDown()
+					},
+					'future': function() {
+						$(this).hide()
+					}
+				})
+			})})	
+			</script>
 		</article>
 		
 	<body>

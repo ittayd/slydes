@@ -1,8 +1,39 @@
 /**
  * Main entry point
  */
-var SLYDES_JS = SLYDES_JS || 'slydes.js'
+var SLYDES_JS = SLYDES_JS || "slydes";
 
+(function() {
+    var scripts = document.getElementsByTagName('script'),
+        slydesjs = undefined
+    
+    for (var i = 0; i < scripts.length; i++) {
+        if (scripts[i].src.indexOf(SLYDES_JS) != -1) {
+            slydesjs = scripts[i]
+        }
+    }
+
+    if (!slydesjs) {
+        var msg = "Could not find the slydes script tag. If you're using a name different than " + SLYDES_JS + " then set the variable SLYDES_JS prior to loading"
+        alert(msg)
+        throw new Error(msg)
+    }
+    
+    var path = slydesjs.src.split('?')[0],      // remove any ?query
+        baseUrl = path.split('/').slice(0, -3).join('/') + '/',  // go up 2 levels
+        requirejs = document.createElement('script');
+
+//    requirejs.src = baseUrl + "lib/require/1.0.7/require-jquery.js"
+//    requirejs.type = "text/javascript"
+//    requirejs.setAttribute('data-main', baseUrl + 'core/js/main')
+    
+    document.write('<script src="' + baseUrl + 'lib/require/1.0.7/require-jquery.js" data-main="' + baseUrl + 'core/js/main" type="text/javascript"></script>')
+    //slydesjs.parentNode.insertBefore(requirejs, slydesjs);
+    
+})()
+
+
+/*
 var Slydes = {
 	readyCallbacks: [],
 	ready: function(callback) {
@@ -61,7 +92,7 @@ var Slydes = {
 (function(){
 	function Slydes_setup() {
 		var $ = jQuery
-		$.noConflict()
+		// $.noConflict()
 		
 		$.extend(Slydes, {
 			import: function() {
@@ -83,45 +114,8 @@ var Slydes = {
 		
 	}
 
-	var scripts = document.getElementsByTagName('script'),
-		slydes = undefined
-	
-	for (var i = 0; i < scripts.length; i++) {
-		if (scripts[i].src.indexOf(SLYDES_JS) != -1) {
-			slydes = scripts[i]
-		}
-	}
-	
-	if (!slydes) {
-		var msg = "Could not find the slydes script tag. If you're using a name different than " + SLYDES_JS + " then set a var named SLYDES_JS with it"
-		alert(msg)
-		throw new Error(msg)
-	}
-	
-	Slydes.script = slydes
-	Slydes.base = slydes.src.replace(new RegExp('\/[^/]+\/' + SLYDES_JS + '.*$'), '/')
-
-	 // Only do anything if jQuery isn't defined
-	if (typeof jQuery == 'undefined') {
-	    if (typeof $ == 'function') {
-			thisPageUsingOtherJSLibrary = true
-		}
-	
-	    var JQUERY_URL = JQUERY_URL || (Slydes.base + '../lib/jquery/jquery.js')
-	    Slydes.loadScript(JQUERY_URL, {head:true, before: slydes}, function() {
-			if (typeof jQuery=='undefined') {
-				alert("Failed to load jquery from " + JQUERY_URL)
-			} else {
-				Slydes_setup()
-			}
-	
-		})
-	
-	} else { // jQuery was already loaded
-		Slydes_setup()
-	}
 })()
-
+*/
 
  
  
