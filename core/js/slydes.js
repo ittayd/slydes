@@ -1,14 +1,17 @@
 /**
  * Main entry point
  */
-var SLYDES_JS = SLYDES_JS || "slydes";
+var Slydes = {
+    SLYDES_JS: "slydes",
+};
+
 
 (function() {
     var scripts = document.getElementsByTagName('script'),
         slydesjs = undefined
     
     for (var i = 0; i < scripts.length; i++) {
-        if (scripts[i].src.indexOf(SLYDES_JS) != -1) {
+        if (scripts[i].src.indexOf(Slydes.SLYDES_JS) != -1) {
             slydesjs = scripts[i]
         }
     }
@@ -18,6 +21,8 @@ var SLYDES_JS = SLYDES_JS || "slydes";
         alert(msg)
         throw new Error(msg)
     }
+  
+    Slydes.script = slydesjs;
     
     var path = slydesjs.src.split('?')[0],      // remove any ?query
         baseUrl = path.split('/').slice(0, -3).join('/') + '/',  // go up 2 levels

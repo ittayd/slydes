@@ -1,10 +1,18 @@
 define(function(require) {
     var $ = require('jquery'),
+        _ = require('underscore'),
+        ignoredAttrs = ['src', 'type'],
         slydes = slydes || {}
-    
+
+    var attrs = {}
+    _.each(Slydes.script.attributes, function(attr) {
+        if(!_.contains(ignoredAttrs, attr.name)) {
+            attrs[attr.name] = attr.value;
+        }
+    });
     return $.extend({// defaults
         plugins: ["core-theme", "prettify"]
-    }, slydes)
+    }, slydes, attrs)
 })
 // jQuery.extend(Slydes, {
 //	options: (function() {

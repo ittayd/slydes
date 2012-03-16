@@ -1,6 +1,27 @@
 /**
  * Misc. utilities. Some of these are required before loading the jquery support
  */
+define(function(require) {
+    return {
+        array: function array(arg) {
+            if (arg === undefined) {
+                return [];
+            }
+            if (Array.isArray(arg)) {
+                return arg;
+            }
+            if (typeof(arg) == 'string') {
+                return arg.split(",");
+            }
+            throw "Argument " + arg + " typeof " + typeof(arg) + " cannot be converter to an array";
+        },
+        
+        parentDir: function parentDir(path) {
+            return path.split('/').slice(0, -1).join('/') + '/'
+        }
+    }
+})
+/*
 Slydes = jQuery.extend(Slydes, {
 	parseQuery: function(first, second) {
 		var query = typeof first === 'string' ? first : window.location.search, 
@@ -24,7 +45,7 @@ Slydes = jQuery.extend(Slydes, {
 	/** 
 	 * Accoring to: http://yearofmoo.com/2011/03/cross-browser-stylesheet-preloading/
 	 */
-	loadCss: function(url, options, onload) {
+/*	loadCss: function(url, options, onload) {
 		var onload = typeof options == 'function' ? options : onload,
 			options = typeof options == 'function' ? {} : (options || {}),
 			options = jQuery.extend({idprefix: 'css-load-track-id', delay: 10, limit: 200}, options),
@@ -41,7 +62,7 @@ Slydes = jQuery.extend(Slydes, {
 		/*if (this.isEventSupported(link, 'load')) {
 			link.onload = success
 		} else {*/
-			if (typeof onload == 'function') {
+/*			if (typeof onload == 'function') {
 				var counter = 0,
 					checker = function() {
 						var stylesheets = document.styleSheets
@@ -69,7 +90,7 @@ Slydes = jQuery.extend(Slydes, {
 				checker()
 			}
 		/*}*/
-	},
+/*	},
 	
 	notice: function(msg) {
 		jQuery.gritter.add({title: 'Notice', text: msg})
@@ -80,7 +101,7 @@ Slydes = jQuery.extend(Slydes, {
 	 * 
 	 * doesn't work in some cases (e.g, returns true for 'load' events on <link> elements in FF4)
 	 */
-	isEventSupported: (function(){
+/*	isEventSupported: (function(){
 		var win = this
 		var cache = {}
 		
@@ -130,3 +151,4 @@ jQuery.fn.equals = function(other) {
 
 Slydes.loadScript(Slydes.base + '../lib/jquery-gritter/js/jquery.gritter.js')
 Slydes.loadCss(Slydes.base + '../lib/jquery-gritter/css/jquery.gritter.css')
+*/

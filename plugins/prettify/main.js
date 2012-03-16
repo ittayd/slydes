@@ -1,15 +1,18 @@
-define(function(require) {
+define(function(require, exports, module) {
     var $ = require('jquery'),
         _ = require('underscore'),
+        utils = require('utils'),
         options = require('options')
         
     require("./lib/prettify");
     require("css!./lib/prettify.css");
     
     if (options.prettify) {
-        var files = _.map(options.prettify, function(lang) {return "./lib/lang-" + lang + ".js"})
+        var base = utils.parentDir(module.uri), 
+            files = _.map(utils.array(options.prettify), function(lang) {return base + "lib/lang-" + lang + ".js"})
+        
         require(files, function() {
-            $(document).ready(prettyPring);
+            $(document).ready(prettyPrint);
         })
     }
     
