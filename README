@@ -1,1 +1,8 @@
-Nothing to see yet...
+Slydes is yet another html5 presentation framework. 
+
+When it is done it will have these features:
+* Presenter mode
+* Allowing viewers to open the presentation locally and sync with its progress
+* Allowing viewers to save their own notes in the presentation
+* Non linear transition between slides
+* jQuery centric to easily customize transitions
