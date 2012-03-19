@@ -25,31 +25,26 @@
 				<li class="slydes-step fly">world</li>
 			</ul>
 			<script>
-            require(['presentation'], function(presentation) {
-                presentation.ready(function(presentation, $){
-                    $('#second_text').hide()
-                    $('#second').bind({
-                        'current': function(){
-                            console.log(arguments)
-                            $('#second_text').delay(1000).show('slow')
-                        },
-                        'future': function() {
-                            $('#second_text').stop(true, true).hide()
-                        }
-                    })
-                    $('.fly').css({opacity: 1, 'margin-left': '100%', position: 'absolute'}).bind({
-                        'current': function() {
-                            $(this).animate({'margin-left': '0%'}, 1000)
-                            return false;
-                        },
-                        'future': function() {
-                            $(this).stop(true, true).css({'margin-left': '100%'})
-                            return false;
-                        }
-                    })
-                    
+                $('#second_text').hide()
+                $('#second').bind({
+                    'current': function(){
+                        console.log(arguments)
+                        $('#second_text').delay(1000).show('slow')
+                    },
+                    'future': function() {
+                        $('#second_text').stop(true, true).hide()
+                    }
                 })
-            })
+                $('.fly').css({opacity: 1, 'margin-left': '100%', position: 'absolute'}).bind({
+                    'current': function() {
+                        $(this).animate({'margin-left': '0%'}, 1000)
+                        return false;
+                    },
+                    'future': function() {
+                        $(this).stop(true, true).css({'margin-left': '100%'})
+                        return false;
+                    }
+                })
 			</script>
 		</article>
 		<article class="slyde">
@@ -61,8 +56,6 @@ trait HelloWorld extends Foo[Bar] {
 	def foo = one
 }</pre>
 			<script>
-            require(['presentation'], function(presentation) {
-                presentation.ready(function(presentation, $){
 				$('#code').css({opacity: 1}).hide().bind({
 					'current': function() {
 						$(this).slideDown()
@@ -71,7 +64,6 @@ trait HelloWorld extends Foo[Bar] {
 						$(this).hide()
 					}
 				})
-			})})	
 			</script>
 		</article>
 		

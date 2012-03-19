@@ -2,19 +2,38 @@
  * A model class representing the presentation 
  */
 define(function(require) {
-  var started = false,
-      readyCallbacks = []
-  return {
-    start: function start() {
-        started = true;
-        alert('started');
-    },
-    
-    ready: function ready(callback) {
-        readyCallbacks.push(callback);
-    }
-  }  
+    var $ = require('jquery'),
+        Tree = require('Tree'),
+        Path = require('Path')
+
+    $.extend(Slydes.presentation, {
+        initialize: function initialize() {
+            var tree = new Tree(document)
+                
+            $(Slydes.presentation).trigger('tree', tree); 
+            
+            var path = new Path(tree);
+                        
+            $(Slydes.presentation).trigger('path', path); 
+            
+            delete(Slydes.presentation.initialize);
+            
+            $.extend(Slydes.presentation, {
+                tree: tree,
+                
+                path: path,
+            })  
+            
+            $(Slydes.presentation).trigger('ready', Slydes.presentation)
+            
+        }
+    })
+
+  return Slydes.presentation
 })
+
+// http://jsfiddle.net/KJP4y/
+
 /*
 (function($) {
 	var defer = $.Deferred()

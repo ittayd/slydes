@@ -3,11 +3,13 @@ define(function(require) {
         _ = require('underscore'),
         presentation = require('presentation'),
         plugins = require('plugins_mgmt')
+        
+    require(plugins.pluginModules)
 
     return {
         initialize: function initialize(){
-            plugins.start(function(){
-                presentation.start()
+            $(document).ready(function() {
+                presentation.initialize();
                 $('html').removeClass('loading')
             })
         }

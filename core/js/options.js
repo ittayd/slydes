@@ -11,7 +11,8 @@ define(function(require) {
         }
     });
     return $.extend({// defaults
-        plugins: ["core-theme", "prettify"]
+        plugins: ["core-theme", "prettify"],
+        stepSelectors: [".slyde", ".slydes-step"]
     }, slydes, attrs)
 })
 // jQuery.extend(Slydes, {

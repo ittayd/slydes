@@ -3,6 +3,8 @@
  */
 var Slydes = {
     SLYDES_JS: "slydes",
+    
+    presentation: {} // to allow binding to 'ready' event
 };
 
 
