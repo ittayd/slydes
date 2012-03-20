@@ -1,5 +1,6 @@
 define(function(require) {
     var $ = require('jquery'),
+        _ = require('underscore')
         options = require('options'),
         selector = options.stepSelectors.join(",")
     
@@ -25,7 +26,22 @@ define(function(require) {
     }   
 
     $.extend(result.prototype, {
-        
+        find: function find(arg) {
+            if (arg instanceof Tree && _.isEqual(this, arg)) {
+                return this;
+            }
+            
+            if (this.elem.is(arg)) {
+                return this
+            }
+            
+            for(i = 0; i < children.length; i++) {
+                var found = children[i].find(arg)
+                if (found) {
+                    return found;
+                }
+            }
+        } 
     })
     
     return result;
