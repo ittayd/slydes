@@ -5,7 +5,8 @@ define(function(require) {
     var $ = require('jquery'),
         Tree = require('Tree'),
         Path = require('Path'),
-        tmpl = require('lib/jquery-tmpl/jquery.tmpl')
+        tmpl = require('lib/jquery-tmpl/jquery.tmpl'),
+        presenter = require('presenter')
         
     $.extend(Slydes.presentation, {
         initialize: function initialize() {
@@ -17,45 +18,15 @@ define(function(require) {
                         
             $(Slydes.presentation).trigger('path', path); 
             
-            
-            $(Slydes.presentation).trigger('before-render', Slydes.presentation)
-            
-            var $rootElements = path.$rootElements(),
-                $header = $('<script type="text/x-jquery-tmpl"></script>').append($('.slydes-header')),
-				$footer = $('<script type="text/x-jquery-tmpl"></script>').append($('.slydes-footer'))
-
-            
-            $('body:not(:has(#slydes-container))').append('<div id="slydes-container"></div>')
-            $rootElements.appendTo($('#slydes-container'))
-            
-   			$('body:not(:has(#slydes-sidebar))').append('<div id="slydes-sidebar"></div>')
-			$('#slydes-sidebar:not(:has(#slydes-notes))').append('<div id="slydes-notes"></div>')
-
-            $rootElements.each(function(index){
-                var $element = $(this);
-                var data = {
-					index: index,
-					total: path.length(),
-					element: $element,
-                    presentation: Slydes.presentation
-				}; 
-                $element.prepend($header.tmpl(data));
-				$element.append($footer.tmpl(data));
-                  
-            })
-            
-
             delete(Slydes.presentation.initialize);
 
             $.extend(Slydes.presentation, {
                 tree: tree,
                 
                 path: path,
-                
-                $header: $header,
-				
-                $footer: $footer
             })  
+            
+            presenter.initialize(Slydes.presentation)
             
             $(Slydes.presentation).trigger('ready', Slydes.presentation)
             

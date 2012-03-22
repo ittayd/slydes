@@ -3,7 +3,7 @@ body {
 	width: 100%;
 }
 
-#slydes-content {
+#slydes-container {
 	-moz-transition: width 1s ease-in-out;
 	-webkit-transition: width 1s ease-in-out;
 	-o-transition: width 1s ease-in-out;
@@ -27,7 +27,7 @@ body {
 	right: 0;
 }
 
-#slydes-content.slydes-sidebar-show {
+#slydes-container.slydes-sidebar-show {
 	width: 65%
 }
 

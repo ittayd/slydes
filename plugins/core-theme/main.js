@@ -1,4 +1,4 @@
 define(function(require) {
-    require("css!./transitions.css");
-    require('css!./style.css');
+    require("css!./transitions");
+    require('css!./style');
 })

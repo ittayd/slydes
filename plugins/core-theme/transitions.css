@@ -1,12 +1,12 @@
-.slyde.slydes-past {
+.slyde.past {
 	margin-left: -110%;
 }
 
-.slyde.slydes-future {
+.slyde.future {
 	margin-left: 110%;
 }
 
-.slyde.slydes-current-slide {
+.slyde.current {
 	margin-left: 0px;
 }
 
@@ -19,7 +19,7 @@
 	float: left;
 }
 
-.slydes-step {
+.slyde.step {
 	-moz-transition: opacity 1s ease-in-out;
 	-webkit-transition: opacity 1s ease-in-out;
 	-o-transition: opacity 1s ease-in-out;
@@ -27,10 +27,10 @@
 
 }
 
-.slydes-step.slydes-future{
+.slyde.step.future{
 	opacity: 0;
 }
 
-.slydes-step.slydes-current {
+.slyde.step.current {
 	opacity: 1;
 }
