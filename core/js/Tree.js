@@ -8,21 +8,21 @@ define(function(require) {
         return this.data('tree')
     }
     
-    var result = function Tree(elem) {
-        this.elem = elem = $(elem);
+    var result = function Tree(element) {
+        this.$element = $(element);
         this.children = [];
 
-        elem.attr('visited', "true")
+        this.$element.attr('visited', "true")
         var self = this,
-            elems = $(elem).find(selector)
+            $children = this.$element.find(selector)
                         
-        elems.each(function(_, elem) {
-            if(!elem.getAttribute('visited')) {
-                self.children.push(new Tree(elem))
+        $children.each(function(_, $child) {
+            if(!$child.getAttribute('visited')) {
+                self.children.push(new Tree($child))
             }
         })
-        elem.data('tree', this)
-        elem.trigger('tree', this)        
+        this.$element.data('tree', this)
+        this.$element.trigger('tree', this)        
     }   
 
     $.extend(result.prototype, {
@@ -31,12 +31,12 @@ define(function(require) {
                 return this;
             }
             
-            if (this.elem.is(arg)) {
+            if (this.$element.is(arg)) {
                 return this
             }
             
-            for(i = 0; i < children.length; i++) {
-                var found = children[i].find(arg)
+            for(i = 0; i < this.children.length; i++) {
+                var found = this.children[i].find(arg)
                 if (found) {
                     return found;
                 }

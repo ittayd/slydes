@@ -4,19 +4,19 @@
 define(function(require) {
     var $ = require('jquery')
     
-    var result = function Step(tree, geneology) {
-        tree.elem.data('step', this)
+    var result = function Step(tree, $geneology) {
+        tree.$element.data('step', this)
         this.tree = tree
-        this.geneology = geneology
-        this.elem = tree.elem
-        tree.elem.trigger('step', this)
+        this.$geneology = $geneology
+        this.$element = tree.$element
+        this.$element.trigger('step', this)
     }
     
     function setClass(cls) {
-        this.elem.removeClass('current past future')
-        this.geneology.removeClass('current-path past-path future-path')
-        this.elem.addClass(cls);
-        this.geneology.addClass(cls + '-path');
+        this.$element.removeClass('current past future')
+        this.$geneology.removeClass('current-path past-path future-path')
+        this.$element.addClass(cls);
+        this.$geneology.addClass(cls + '-path');
     }
     
     $.extend(result.prototype, {

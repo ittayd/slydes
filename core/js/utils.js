@@ -2,6 +2,28 @@
  * Misc. utilities. Some of these are required before loading the jquery support
  */
 define(function(require) {
+    var _ = require('underscore'),
+        $ = require('jquery')
+    
+    _.mixin({
+        collect: function collect(obj, iterator, context) {
+            var results = [];
+            _.each(obj, function(value, index, list) {
+                var current = iterator.call(context, value, index, list);
+                if (current !== undefined) {
+                    results[results.length] = current;
+                }
+            });
+            return results;
+        }
+    });
+    
+    $.fromArray = function fromArray(arr) {
+    
+        return $(arr).map(function () {return this.toArray(); } );
+
+    };
+    
     return {
         array: function array(arg) {
             if (arg === undefined) {

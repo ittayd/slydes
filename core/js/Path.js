@@ -42,6 +42,19 @@ define(function(require){
                 }
             })
             this.steps[index].current();
+        },
+        
+        $rootElements: function stepElements() {
+            var arr = _.collect(this.steps, function(step) {
+                if (step.$geneology.length == 0) {
+                    return step.$element;
+                }
+            })
+            return $.fromArray(arr)
+        },
+        
+        length: function length() {
+            return this.steps.length;
         }
     })
     
